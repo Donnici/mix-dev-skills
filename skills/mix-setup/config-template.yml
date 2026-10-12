@@ -1,0 +1,63 @@
+# mix-dev-skills project configuration (mix.yml). Written by /mix-setup; safe to edit by hand.
+# In-repo: <repo>/docs/ai/mix.yml (paths relative to the repo root).
+# Hub:     <project folder>/mix.yml (paths relative to the project folder).
+# Point paths at what the folder already has (a Spec Kit constitution, existing specs, notes);
+# mix-setup only creates what is missing.
+
+project: nimbus
+
+paths:
+  constitution: .specify/memory/constitution.md   # in-repo default: docs/ai/constitution.md
+  architecture: architecture.md                   # system map; in-repo default: docs/ai/architecture.md
+  repo_architecture: architecture                 # folder with one <repo>.md per repo (multi-repo only)
+  knowledge: [index.md, files]                    # domain notes, decisions, setup docs to consult
+  glossary: GLOSSARY.md
+  adr: adr                                        # in-repo default: docs/adr
+  specs: specs
+
+# Where the code lives. Anywhere on disk; it does not need to be near the hub.
+root: ~/code/nimbus                # may mirror an existing context.yml workspaceRoot
+repos:                             # paths relative to root, or absolute
+  - name: storefront
+    path: storefront
+    role: Online store customers browse and buy from
+    owns: [pages, components, client hooks, calls to catalog-api]
+  - name: catalog-api
+    path: catalog-api
+    role: Core web service
+    owns: [business rules, services, persistence, auth, public HTTP contract]
+  - name: admin-web
+    path: admin-web
+    role: Back-office for store operators
+    owns: [admin screens, reports, calls to catalog-api]
+# Folders under root that are not part of this project's code.
+ignore: [docs-site, tooling]
+# Who calls whom. Drives contract direction in plans and task order.
+integrations:
+  - from: storefront
+    to: catalog-api
+    via: HTTP/JSON          # e.g. REST, GraphQL, tRPC, events
+    contract_source: ""     # where the contract is defined, e.g. catalog-api/openapi.yaml
+
+git:
+  enabled: auto             # auto = use git where a repo is a git repo; false = never touch git
+  base_branch: main         # per-repo override: add base_branch to a repo entry
+  # Fixed text stays as written; [brackets] are variables.
+  # Filled automatically: [NNN] feature number, [slug] short name, [story] story slug (us1-login).
+  # Inferred then confirmed: [type] feat|fix|chore|refactor|docs|test|perf.
+  # Asked every time: [ticket] and any other variable.
+  branch_pattern: "spec/[NNN]-[slug]"
+  story_branch_pattern: "spec/[NNN]-[story]"
+  # single:            one branch (per repo touched) and one PR per repo for the whole feature
+  # per-story:         one branch and PR per user story (per repo touched), targeting base_branch
+  # per-story-stacked: a feature branch with a macro PR; story PRs target the feature branch
+  strategy: single
+  pr_title_pattern: "[type]: [title]"
+  commit_style: conventional   # conventional | ticket-prefix ("[ticket] message") | free
+  pr_template: auto            # auto = use the repo's .github/pull_request_template.md when present
+
+tracker:
+  type: none                # none | jira | linear | github | gitlab | other
+  key_example: ""           # e.g. ABC-123, used to validate codes you type
+  create_tickets: ask       # ask | always | never: create story tickets from /mix-tasks
+  notes: ""                 # how tickets are created here (MCP server, CLI, by hand)

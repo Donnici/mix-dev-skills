@@ -1,0 +1,21 @@
+# mix-dev-skills hub (mix-hub.yml at the hub root).
+# A hub holds many projects at any path inside it; each project folder has its own mix.yml.
+# Register the hub in ~/.mix-dev/registry.yml so sessions opened inside code repos find it.
+
+active: nimbus
+
+# Where `/mix-scope new <name>` creates project folders.
+default_project_dir: projects
+
+projects:
+  nimbus:
+    path: work/clients/nimbus
+  orbit:
+    path: work/clients/orbit
+  lumen:
+    path: work/clients/lumen
+
+# Optional: folders matching these globs that contain a mix.yml are projects too
+# (name = the mix.yml `project` field, else the folder name).
+discover:
+  - work/clients/*
