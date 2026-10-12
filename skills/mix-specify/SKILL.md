@@ -24,12 +24,11 @@ A git repo is not required. With nothing set up, suggest `/mix-setup` once and c
 
 - Short name: 2–4 words, action-noun, kebab-case, keeping technical terms (`user-auth`,
   `oauth2-api-integration`, `fix-payment-timeout`).
-- Number: next free 3-digit prefix in the project's specs folder (`003-user-auth`). If the folder already
+- Number: next free 3-digit prefix in the project's `specs/` (`003-user-auth`). If the folder already
   uses timestamp prefixes, follow that.
-- Create `<specs>/<NNN-short-name>/spec.md` from [spec-template.md](spec-template.md). In a hub,
+- Create `specs/<NNN-short-name>/spec.md` under the project's base, from
+  `mix-dev-skills/templates/spec.md` when the project has one, else [spec-template.md](spec-template.md). In a hub,
   follow the hub's file conventions (e.g. list the new spec in the specs `index.md`).
-- If the project folder has a Spec Kit `.specify/feature.json`, set its `feature_directory` to
-  the new folder so Spec Kit commands keep working side by side.
 - One feature per invocation.
 
 ## 2. Load context and explore

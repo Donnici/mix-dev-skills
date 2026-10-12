@@ -7,9 +7,8 @@ argument-hint: "[rule to add or change]"
 # Constitution
 
 Maintain the project's constitution: the single source of truth for the rules agents follow.
-Call the Skill tool with `mix-scope` for its path (default `docs/ai/constitution.md`). If that
-file doesn't exist but `.specify/memory/constitution.md` does (a Spec Kit repo), read that one as
-the current version and offer to move it.
+It lives at `mix-dev-skills/constitution.md` under the project's base (resolved by the `mix-scope`
+skill). A Spec Kit or other legacy constitution is not edited here: recommend `/mix-migrate`.
 
 ## Scope guard
 
@@ -19,7 +18,8 @@ end with the skill that handles them, never executed here.
 
 ## Steps
 
-1. **Load.** Read the existing constitution, or start from [constitution-template.md](constitution-template.md).
+1. **Load.** Read the existing constitution, or start from `mix-dev-skills/templates/constitution.md` when the project has one, else
+   [constitution-template.md](constitution-template.md).
    Read the architecture docs if they exist: it supplies the manifest files, package manager,
    and quality-gate commands for the placeholders.
 
@@ -44,7 +44,7 @@ end with the skill that handles them, never executed here.
    at `1.0.0`. State the bump reason.
 
 5. **Show the diff, then write.** Present the changed rules to the user and wait for approval.
-   Write to the constitution path.
+   Write to `mix-dev-skills/constitution.md`.
 
 6. **Report.** New version and why; any `TODO(...)` left; proposed automated checks; suggested
    commit message (`docs: amend constitution to vX.Y.Z (<summary>)`); **Next actions** if any.

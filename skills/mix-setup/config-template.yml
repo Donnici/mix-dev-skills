@@ -1,22 +1,14 @@
-# mix-dev-skills project configuration (mix.yml). Written by /mix-setup; safe to edit by hand.
-# In-repo: <repo>/docs/ai/mix.yml (paths relative to the repo root).
-# Hub:     <project folder>/mix.yml (paths relative to the project folder).
-# Point paths at what the folder already has (a Spec Kit constitution, existing specs, notes);
-# mix-setup only creates what is missing.
+# mix-dev-skills project config: <base>/mix-dev-skills/mix.yml. Written by /mix-setup; safe to
+# edit by hand. <base> is the repo root (in-repo) or the project folder (hub). The layout around
+# this file is fixed (see the mix-scope skill); only the values below are configurable.
 
 project: nimbus
 
-paths:
-  constitution: .specify/memory/constitution.md   # in-repo default: docs/ai/constitution.md
-  architecture: architecture.md                   # system map; in-repo default: docs/ai/architecture.md
-  repo_architecture: architecture                 # folder with one <repo>.md per repo (multi-repo only)
-  knowledge: [index.md, files]                    # domain notes, decisions, setup docs to consult
-  glossary: GLOSSARY.md
-  adr: adr                                        # in-repo default: docs/adr
-  specs: specs
+# Notes the user keeps elsewhere, read as reference and never moved (paths relative to <base>).
+knowledge: [index.md, files]
 
 # Where the code lives. Anywhere on disk; it does not need to be near the hub.
-root: ~/code/nimbus                # may mirror an existing context.yml workspaceRoot
+root: ~/code/nimbus
 repos:                             # paths relative to root, or absolute
   - name: storefront
     path: storefront
@@ -59,5 +51,15 @@ git:
 tracker:
   type: none                # none | jira | linear | github | gitlab | other
   key_example: ""           # e.g. ABC-123, used to validate codes you type
+  access: read-write        # read-write | read-only (agents only read; drafts are saved locally)
   create_tickets: ask       # ask | always | never: create story tickets from /mix-tasks
-  notes: ""                 # how tickets are created here (MCP server, CLI, by hand)
+  triage_prs: false         # true = /mix-triage also handles PRs from outside the team
+  labels:                   # triage role → label string in this tracker
+    bug: bug
+    enhancement: enhancement
+    needs-triage: needs-triage
+    needs-info: needs-info
+    ready-for-agent: ready-for-agent
+    ready-for-human: ready-for-human
+    wontfix: wontfix
+  notes: ""                 # how issues are read and created here (MCP server, CLI, by hand)

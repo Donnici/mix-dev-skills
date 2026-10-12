@@ -4,7 +4,7 @@ The rules every agent follows when it specifies, plans, implements, or reviews c
 repository. `MUST` rules are gates: a plan that breaks one is rejected, and a diff that breaks one
 is a blocking review finding. `SHOULD` rules are defaults that may be broken with a written reason.
 
-Repository map (stack, libraries, patterns, exemplar files): [ARCHITECTURE_PATH]
+Repository map (stack, libraries, patterns, exemplar files): `mix-dev-skills/architecture.md`
 
 ## Core Principles
 
@@ -86,8 +86,8 @@ concrete example. The repository is the style guide.
 ### VII. Consistency With the Architecture
 
 - New code MUST follow the layering, folder structure, naming, and patterns recorded in the
-  architecture doc and in the ADRs ([ADR_PATH]).
-- Domain terms come from the glossary ([GLOSSARY_PATH]) when it exists; code, tests, and specs use the same words.
+  architecture doc and in the ADRs (`mix-dev-skills/adr/`).
+- Domain terms come from the glossary (`mix-dev-skills/glossary.md`) when it exists; code, tests, and specs use the same words.
 - A change that needs to break an architectural rule MUST record the reason in the plan's
   Complexity Tracking table, and an ADR if it is hard to reverse.
 

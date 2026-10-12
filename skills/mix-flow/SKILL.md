@@ -11,15 +11,21 @@ summaries here are for orientation.
 
 ## Projects, repos, hub
 
-A **project** (scope) is one product or one company's work: its own rules, architecture docs,
-knowledge notes, glossary, ADRs, specs, and one or more code **repos** (e.g. `web`, `bff`, `api`),
-wherever they are on disk. Projects live either **in-repo** (`docs/ai/` of a single repo) or in a
-**hub**: a folder outside the code (an existing notes repo, or `~/.mix-dev/`) where each project
-is a folder at any path, e.g. `work/clients/<company>/`. Existing material in that
-folder (a Spec Kit constitution, `specs/`, notes) is adopted, not duplicated.
+A **project** (scope) is one product or one company's work: its rules, architecture docs,
+glossary, ADRs, templates, specs, and one or more code **repos** (e.g. `web`, `bff`, `api`),
+wherever they are on disk. Everything the flow owns that is not a spec lives in a
+`mix-dev-skills/` folder; specs live in `specs/` beside it. Both sit at the project's base: the
+repo root (**in-repo**) or a project folder at any path inside a **hub** (a folder outside the
+code, e.g. an existing notes repo, holding many projects).
 
 - **`/mix-scope`**: show the active project; `/mix-scope lumen` switches; `list`; `new <name>`.
   Every other skill resolves its context through it.
+
+## Coming from Spec Kit or Matt Pocock's skills
+
+**`/mix-migrate`** moves `.specify/`, speckit commands, `GLOSSARY.md`, `docs/adr/`,
+`.out-of-scope/`, `docs/agents/`, and `.scratch/` into the mix layout, converting the
+constitution and config and fixing references. `--dry-run` shows the plan only.
 
 ## Once per project
 
@@ -68,6 +74,14 @@ Names follow the configured patterns: fixed text plus `[variables]`. Default `sp
 Supported. Branch/commit/PR steps are skipped, planned names go to `<feature>/delivery.md`, and
 review works from the files the feature touched.
 
+## On-ramps
+
+- **Issues and requests arriving raw** → **`/mix-triage`**: categorise, dedupe, verify, grill, and
+  write agent-ready briefs. Large enhancements continue at `/mix-specify --quick`.
+- **Something broken, flaky, or slow** → **`mix-diagnose`**: build a tight red loop first, then
+  hypothesise, fix with a regression test. Afterwards `/mix-retro` if a check or rule would have
+  prevented it.
+
 ## Small changes
 
 A bug fix or a one-file change doesn't need the full flow. Implement directly, then run
@@ -78,22 +92,24 @@ A bug fix or a one-file change doesn't need the full flow. Implement directly, t
 - **`/mix-constitution <rule>`**: add or change a rule.
 - **`mix-grill`**: "grill me on this" for any plan or design.
 - **`mix-testing`**: how to choose seams and which tests to delete.
+- **`/mix-wait-what`**: the last message didn't land; re-pitch it plainly, in glossary terms.
 
 ## Files
 
 ```text
-~/.mix-dev/registry.yml                  hubs to search when a session starts inside a code repo
+<base>/                          repo root (in-repo) or project folder (hub)
+├── mix-dev-skills/
+│   ├── mix.yml                  code root, repos, roles, knowledge pointers, conventions
+│   ├── constitution.md          rules (MUST / SHOULD), versioned
+│   ├── architecture.md          repo map, or system map for multi-repo projects
+│   ├── architecture/<repo>.md   per-repo maps (multi-repo)
+│   ├── glossary.md              domain terms
+│   ├── adr/                     hard-to-reverse decisions
+│   ├── out-of-scope/            rejected requests
+│   ├── triage/                  local triage drafts
+│   └── templates/               optional project overrides of the bundled templates
+└── specs/NNN-slug/              spec.md, plan.md, tasks.md, checklists/, delivery.md
 
-Hub (e.g. ~/workspace/knowledge-hub)
-  mix-hub.yml                            projects (name → folder) + active
-  <project folder>/mix.yml               code root, repos, roles, paths, conventions
-  <project folder>/...                   constitution, architecture docs, knowledge, glossary,
-                                         ADRs, specs/NNN-slug/ — wherever mix.yml points
-
-In-repo
-  docs/ai/mix.yml, docs/ai/constitution.md, docs/ai/architecture.md, GLOSSARY.md, docs/adr/,
-  specs/NNN-slug/
+<hub>/mix-dev-skills/hub.yml     projects (name → folder) + active
+~/.mix-dev-skills/registry.yml   hubs to search when a session starts inside a code repo
 ```
-
-Repos already using Spec Kit: `.specify/memory/constitution.md` is read when no mix constitution
-exists, and `specs/` keeps the same layout.

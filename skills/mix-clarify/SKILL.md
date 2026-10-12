@@ -14,9 +14,8 @@ skipping it is allowed but raises rework risk, so say so once.
 several) and the paths to the constitution, architecture docs, glossary, ADRs, and specs folder.
 A git repo is not required.
 
-**Feature**: the folder passed as argument; else the one whose spec **Delivery** line names the
-current git branch; else `feature_directory` in the project folder's `.specify/feature.json`
-(Spec Kit); else the most recently modified feature folder. Confirm it in one line. If there is
+**Feature**: the folder in the project's `specs/` passed as argument; else the one whose spec
+**Delivery** line names the current git branch; else the most recently modified one. Confirm it in one line. If there is
 no `spec.md`, stop and point to `/mix-specify`.
 
 ## 1. Load
@@ -37,7 +36,7 @@ Mark each category **Clear / Partial / Missing** (internal map, shown only if no
 - **Integrations**: external services and their failure modes, import/export formats.
 - **Edge cases & failures**: negative paths, rate limits, concurrent edits, partial failure.
 - **Constraints & trade-offs**: stated constraints, rejected alternatives.
-- **Terminology**: terms that drift or conflict with `GLOSSARY.md`.
+- **Terminology**: terms that drift or conflict with the glossary.
 - **Completion signals**: are acceptance scenarios testable? Is "done" measurable?
 - **Placeholders**: TODOs, `[NEEDS CLARIFICATION]`, vague adjectives ("fast", "intuitive",
   "robust") with no measure.

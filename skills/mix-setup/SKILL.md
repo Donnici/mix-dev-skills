@@ -7,10 +7,11 @@ argument-hint: "[project name] [focus area]"
 
 # Setup
 
-Produce the per-project context every other `mix-*` skill reads:
+Produce the per-project context every other `mix-*` skill reads, all inside the project's
+`mix-dev-skills/` folder (layout: the `mix-scope` skill):
 
 - **Config** (`mix.yml`, template: [config-template.yml](config-template.yml)): code root, repos
-  and their roles, where each artifact lives, branch/PR/ticket conventions.
+  and their roles, knowledge pointers, branch/PR/ticket conventions.
 - **Architecture docs**: per repo, what it is and how code is written there
   ([architecture-template.md](architecture-template.md)); for multi-repo projects, a system map of
   how the repos integrate ([system-template.md](system-template.md)).
@@ -24,28 +25,30 @@ Git is optional throughout. A repo that isn't a git repo skips git steps; say so
 
 ## 1. Where does this project live?
 
-Call the Skill tool with `mix-scope` to see what already exists. Then ask, recommended first:
+Call the Skill tool with `mix-scope` to see what already exists. **If it reports Spec Kit or Matt
+Pocock material** (`.specify/`, `GLOSSARY.md`, `docs/adr/`, `.out-of-scope/`, `docs/agents/`,
+...), stop and recommend `/mix-migrate` first; setup continues on the migrated structure.
+
+Then ask, recommended first:
 
 - **Hub** (recommended when the project spans several repos, when the user keeps several
-  projects or companies, or when the company doesn't use this flow): context lives outside the
-  code, in a project folder inside a hub. The hub may be an existing repo (a notes vault, a
-  company-knowledge repo) or a new folder (default `~/.mix-dev/`). Nothing is written inside the
-  code repos.
-- **In-repo** (one repo, team adopts the flow): context in `docs/ai/` of that repo, committed.
+  projects or companies, or when the company doesn't use this flow): the project's
+  `mix-dev-skills/` and `specs/` live in a project folder inside a hub, outside the code. The hub
+  may be an existing repo (a notes vault, a company-knowledge repo) or a new folder (default
+  `~/mix-dev-skills-hub/`). Nothing is written inside the code repos.
+- **In-repo** (one repo, team adopts the flow): `mix-dev-skills/` and `specs/` at the repo root,
+  committed with the code.
 
 Hub: the project folder is either an **existing folder** the user points at
-(`work/clients/nimbus`), registered through `mix-scope add <path>`, or a new one
-through `mix-scope new <name>`. Make sure the hub is listed in `~/.mix-dev/registry.yml`.
+(`work/clients/nimbus`), registered through `mix-scope add <path>`, or a new one through
+`mix-scope new <name>`. Make sure the hub is listed in `~/.mix-dev-skills/registry.yml`.
 
-**Adopt what the project folder already has.** Before proposing any path, inventory the folder
-and point `paths` at existing material instead of creating parallel copies:
+Inventory the project folder for material that stays where it is:
 
-- `.specify/memory/constitution.md` → `paths.constitution` (amended in place, not moved).
-- An existing `specs/` with `NNN-*` folders → `paths.specs`; numbering continues from it.
-- Notes and reference docs (`files/`, `docs/`, `notes/`, an `index.md`) → `paths.knowledge`.
-- `context.yml` / `.env` / any file naming the code location (`workspaceRoot`, `ROOT`) → the
-  proposed `root`.
-- An existing glossary or ADR folder → `paths.glossary`, `paths.adr`.
+- Notes and reference docs (`files/`, `docs/`, `notes/`, an `index.md`) → `knowledge:` in
+  `mix.yml`, read as reference, never moved.
+- A file naming the code location (`context.yml` with `workspaceRoot`, a `.env` with `ROOT`, ...)
+  → the proposed `root`.
 - The hub's `CLAUDE.md` / `AGENTS.md`: its conventions (naming, index files, frontmatter,
   language, commit policy) apply to every file written in the project folder.
 
@@ -70,8 +73,8 @@ Read whatever exists; assume nothing. Dispatch one read-only subagent **per repo
    `pyproject.toml` / `go.mod` / `Cargo.toml` / `pom.xml` / `Gemfile` / `composer.json` when
    present, `Dockerfile`, CI workflows (the commands CI runs are the quality gates).
 2. **Docs**: `README*`, `CONTRIBUTING*`, `docs/`, `CLAUDE.md` / `AGENTS.md`, `.cursor/rules`,
-   `.github/copilot-instructions.md`, `GLOSSARY.md`, ADRs, `.specify/memory/constitution.md`.
-   Existing written rules are inputs to the constitution.
+   `.github/copilot-instructions.md`, the project's glossary and ADRs. Existing written rules are
+   inputs to the constitution.
 3. **Structure**: the tree two to three levels deep; entry points; grouping by layer or feature;
    import aliases.
 4. **Patterns**: for each kind of module (pages, components, hooks, endpoints, services,
@@ -123,8 +126,12 @@ branch and PR per story per repo touched), or `per-story-stacked` (feature branc
 PR; story PRs target it). Then story branch pattern, PR title pattern (`[type]: [title]`, or
 `[ticket] [title]` with tickets), commit style (detected, else conventional).
 
-**C. Tracker**: none / Jira / Linear / GitHub / GitLab / other, a sample key, and whether
-`/mix-tasks` creates story tickets (`ask` by default). "Other" → record the user's description.
+**C. Tracker**: none / Jira / Linear / GitHub / GitLab / other, a sample key, whether agents may
+write to it or only read (`access`), and whether `/mix-tasks` creates story tickets (`ask` by
+default; `never` when read-only). If the user will use `/mix-triage`: keep the default triage
+labels? (recommended: yes; otherwise collect the existing label names so no duplicates are
+created), and should external PRs be triaged too (default no). "Other" → record the user's
+description in `notes`.
 
 **D. Architecture**: the drafts (key tables if long), each **inconsistency** with a recommended
 **Preferred** pattern, and the **project-specific rules** found in docs and code. Multi-repo:
@@ -132,16 +139,17 @@ also the integration table and the usual order of change across repos.
 
 ## 5. Write
 
-1. `mix.yml` (hub: in the project folder; in-repo: `docs/ai/mix.yml`), with `paths` pointing at
-   the material adopted in step 1.
-2. Architecture docs at the configured paths, following the hub's file conventions (e.g. list
-   them in the folder's `index.md` when the hub keeps one). Single repo: one `architecture.md`. Multi-repo: the system map at
-   `paths.architecture` plus one `<repo>.md` per repo under `paths.repo_architecture`. Existing
-   docs are updated in place: keep hand-written sections, refresh evidence-backed ones, list what
-   changed.
+1. `mix-dev-skills/mix.yml` under the project's base (the repo root, or the project folder in a
+   hub).
+2. Architecture docs in `mix-dev-skills/`, from the templates (a project override in
+   `mix-dev-skills/templates/` wins over the bundled one). Single repo: `architecture.md`.
+   Multi-repo: the system map as `architecture.md` plus `architecture/<repo>.md` per repo.
+   Existing docs are updated in place: keep hand-written sections, refresh evidence-backed ones,
+   list what changed. In a hub, follow its file conventions (e.g. list new files in the folder's
+   `index.md` when the hub keeps one).
 3. Call the Skill tool with `mix-constitution`, passing the confirmed project-specific rules
-   (per repo where they differ), the quality-gate commands per repo, manifests, package managers,
-   and the constitution path.
+   (per repo where they differ), the quality-gate commands per repo, manifests, and package
+   managers. It writes `mix-dev-skills/constitution.md`.
 4. The pointer. In-repo: a block in `CLAUDE.md` (or `AGENTS.md` when only that exists; neither →
    ask which). Hub: the hub's `CLAUDE.md`, leaving code repos untouched.
 
@@ -149,8 +157,8 @@ also the integration table and the usual order of change across repos.
    ## Engineering context
 
    - mix-dev-skills: resolve the project with the `mix-scope` skill before planning or coding.
-   - Read the constitution (rules) and the architecture docs (stack, libraries, patterns, golden
-     files; for multi-repo projects, how the repos integrate).
+   - Read `mix-dev-skills/constitution.md` (rules) and `mix-dev-skills/architecture.md` (stack,
+     libraries, patterns, golden files; for multi-repo projects, how the repos integrate).
    - Before creating any file, find and read the closest existing example of its kind.
    - Use installed libraries for their listed purpose; ask before adding a dependency.
    ```

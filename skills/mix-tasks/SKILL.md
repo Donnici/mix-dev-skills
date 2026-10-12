@@ -14,9 +14,8 @@ re-reading the whole spec.
 several) and the paths to the constitution, architecture docs, glossary, ADRs, and specs folder.
 A git repo is not required.
 
-**Feature**: the folder passed as argument; else the one whose spec **Delivery** line names the
-current git branch; else `feature_directory` in the project folder's `.specify/feature.json`
-(Spec Kit); else the most recently modified feature folder. Confirm it in one line. Requires
+**Feature**: the folder in the project's `specs/` passed as argument; else the one whose spec
+**Delivery** line names the current git branch; else the most recently modified one. Confirm it in one line. Requires
 `spec.md` and `plan.md`; if either is missing, name the skill to run.
 
 ## 1. Load
@@ -48,7 +47,8 @@ when the phase is done the story works and can be demonstrated alone. Never slic
 
 ## 3. Write each task
 
-Use [tasks-template.md](tasks-template.md). Every task:
+Use `mix-dev-skills/templates/tasks.md` when the project has one, else
+[tasks-template.md](tasks-template.md). Every task:
 
 - Starts with `- [ ] T###`, numbered in execution order.
 - Names its repo (`[api]`, `[web]`) in multi-repo projects.

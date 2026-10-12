@@ -33,6 +33,10 @@ ignora os padrões e as bibliotecas que o repositório já usa.
 | `/mix-review` | Revisão em 3 eixos (Padrões, Spec, Testes) em subagentes paralelos, com verificação de cada achado; corrige, gera tasks de convergência ou comenta no PR. | comando + automática |
 | `/mix-pr` | Dono das convenções de branch, commit e PR (single, por história, ou empilhado; um PR por repo). Push e PR só quando você pede explicitamente. | comando + automática |
 | `/mix-retro` | Transforma comentários recorrentes de PR em lint/CI, regras ou contexto. | comando |
+| `/mix-triage` | Triagem de issues (e PRs externos): categoria e estado, duplicidade e rejeições anteriores, reprodução, grill e brief pronto para agente. Nada é escrito no tracker sem confirmação; tracker só-leitura gera rascunhos locais. | comando |
+| `mix-diagnose` | Bugs difíceis e regressões de performance: primeiro um loop de feedback que fica vermelho no bug, depois hipóteses, instrumentação, fix com teste de regressão e limpeza. Funciona entre repos. | comando + automática |
+| `/mix-wait-what` | "Não entendi": reexplica a última mensagem com contexto, em linguagem simples e com os termos do glossário. | comando |
+| `/mix-migrate` | Move a estrutura do Spec Kit e das skills do Matt para o layout do mix (`mix-dev-skills/` + `specs/`), convertendo constituição e configuração e corrigindo links. | comando |
 | `mix-grill` | Primitiva de entrevista: rodadas, resposta recomendada, fatos são do agente e decisões são suas. | automática |
 | `mix-testing` | Referência de testes: seams, mocks, anti-padrões e o passe de poda. | automática |
 | `/mix-flow` | Roteador: qual skill usar em cada situação. | comando |
@@ -106,12 +110,12 @@ Configurado no `/mix-setup`, ajustável por feature no `/mix-specify`:
 
 As skills não precisam morar dentro do repositório de código. Um **hub** é uma pasta fora do
 código, que pode ser um repo que você já tem (um vault de notas, um repo centralizador) ou uma
-pasta nova (`~/.mix-dev/`). Cada **projeto** (escopo) é uma pasta em **qualquer caminho** dentro
-do hub, com sua constituição, arquitetura, notas, specs e os **repos de código**, que ficam onde
-estiverem no disco:
+pasta nova (`~/mix-dev-skills-hub/`). Cada **projeto** (escopo) é uma pasta em **qualquer
+caminho** dentro do hub, com a sua pasta `mix-dev-skills/` e as suas `specs/`; os **repos de
+código** ficam onde estiverem no disco:
 
 ```yaml
-# ~/workspace/knowledge-hub/mix-hub.yml
+# ~/workspace/knowledge-hub/mix-dev-skills/hub.yml
 active: nimbus
 projects:
   nimbus: { path: work/clients/nimbus }
@@ -120,12 +124,9 @@ projects:
 ```
 
 ```yaml
-# ~/workspace/knowledge-hub/work/clients/nimbus/mix.yml (trecho)
-paths:
-  constitution: .specify/memory/constitution.md   # reaproveita a do Spec Kit
-  knowledge: [index.md, files]                    # notas e decisões da empresa
-  specs: specs
-root: ~/code/nimbus                               # código em outro lugar
+# ~/workspace/knowledge-hub/work/clients/nimbus/mix-dev-skills/mix.yml (trecho)
+knowledge: [index.md, files]          # notas da empresa, lidas como referência e nunca movidas
+root: ~/code/nimbus                   # código em outro lugar
 repos:
   - { name: storefront, path: storefront, role: Loja online, owns: [páginas, hooks, chamadas à catalog-api] }
   - { name: catalog-api, path: catalog-api, role: Web service, owns: [regras de negócio, serviços, banco, auth] }
@@ -135,18 +136,31 @@ integrations:
 
 - **Escopo**: `/mix-scope orbit` troca o projeto ativo. Abrir uma sessão dentro de
   `~/code/partner-x/orbit` seleciona o projeto Orbit sozinho (o hub fica registrado em
-  `~/.mix-dev/registry.yml`).
-- **Pasta existente**: `/mix-scope add work/clients/nimbus` adota o que já está lá
-  (constituição do Spec Kit, `specs/` com a numeração atual, `files/` como conhecimento,
-  `context.yml` como root do código) em vez de criar cópias. As convenções do `CLAUDE.md` do hub
-  (nomes, `index.md`, frontmatter) valem para tudo que as skills escrevem nele.
+  `~/.mix-dev-skills/registry.yml`).
+- **Pasta existente**: `/mix-scope add work/clients/nimbus` registra uma pasta que já existe; as
+  notas dela entram em `knowledge:` e o local do código vira o `root`. As convenções do
+  `CLAUDE.md` do hub (nomes, `index.md`, frontmatter) valem para tudo que as skills escrevem nele.
 - **Feature ponta a ponta**: `/mix-specify autenticação` gera uma spec única; o `/mix-plan` decide
   que a página e os hooks de login vão no frontend, e as regras, o serviço e o banco na API (e a
   rota intermediária no BFF, se existir). Ele também define o **contrato** entre eles (rota,
   método, campos, tipos, erros, auth). O `/mix-implement` implementa os dois lados contra o mesmo
   contrato e verifica a integração. Branches e PRs são por repo, com o mesmo nome de branch e
   links entre os PRs irmãos.
-- Spec Kit continua funcionando lado a lado: o `.specify/feature.json` é lido e atualizado.
+
+## Migrando do Spec Kit ou das skills do Matt
+
+As skills do mix não leem nem escrevem nas estruturas do Spec Kit (`.specify/`) ou do Matt
+(`GLOSSARY.md`, `docs/adr/`, `.out-of-scope/`, `docs/agents/`, `.scratch/`). Quando encontram
+uma delas, recomendam o **`/mix-migrate`**, que:
+
+- inventaria tudo o que existe e mostra o plano (origem → destino → ação) antes de mexer em algo
+  (`--dry-run` para parar aí);
+- converte a constituição do Spec Kit para o formato do mix sem perder nenhuma regra, move
+  glossário, ADRs (renumerando se houver várias pastas) e `out-of-scope`, e leva as configurações
+  de tracker e labels para o `mix.yml`;
+- mantém as specs em `specs/`, só acrescentando a linha de Delivery;
+- remove scripts, hooks e comandos `speckit-*` só com sua confirmação, usa `git mv` para manter o
+  histórico, corrige links para os caminhos antigos e nunca faz push.
 
 ## Sem git?
 
@@ -161,20 +175,26 @@ exato (repo, branch, base, título e corpo).
 
 ## Arquivos gerados
 
+Tudo o que não é spec fica numa pasta `mix-dev-skills/`; as specs ficam em `specs/` ao lado dela.
+As duas ficam na raiz do repo (in-repo) ou na pasta do projeto dentro do hub:
+
 ```text
-~/.mix-dev/registry.yml          hubs conhecidos (para achar o projeto a partir do repo de código)
+<base>/
+├── mix-dev-skills/
+│   ├── mix.yml                  root do código, repos, papéis, notas, convenções
+│   ├── constitution.md          regras (MUST / SHOULD), versionadas
+│   ├── architecture.md          mapa do repo, ou do sistema quando há vários repos
+│   ├── architecture/<repo>.md   mapa de cada repo (multi-repo)
+│   ├── glossary.md              termos de domínio
+│   ├── adr/                     decisões difíceis de reverter
+│   ├── out-of-scope/            pedidos rejeitados (triagem)
+│   ├── triage/                  rascunhos de triagem (tracker só-leitura)
+│   └── templates/               templates próprios do projeto (sobrepõem os padrão)
+└── specs/NNN-slug/              spec.md, plan.md, tasks.md, checklists/, delivery.md
 
-Hub                              mix-hub.yml                  projetos (nome → pasta) + ativo
-                                 <pasta do projeto>/mix.yml   root do código, repos, papéis, caminhos, convenções
-                                 <pasta do projeto>/...       constituição, arquitetura (sistema + por repo),
-                                                              conhecimento, glossário, ADRs, specs/NNN-slug/
-
-In-repo                          docs/ai/mix.yml, docs/ai/constitution.md, docs/ai/architecture.md,
-                                 GLOSSARY.md, docs/adr/, specs/NNN-slug/
+<hub>/mix-dev-skills/hub.yml     projetos (nome → pasta) + ativo
+~/.mix-dev-skills/registry.yml   hubs conhecidos (para achar o projeto a partir do repo de código)
 ```
-
-Repos que já usam Spec Kit: `.specify/memory/constitution.md` é lido quando não existe a
-constituição do mix, e `specs/` mantém o mesmo layout.
 
 ## De onde veio cada parte
 
@@ -194,12 +214,15 @@ constituição do mix, e `specs/` mantém o mesmo layout.
 | `mix-testing` | — | `tdd`, `tests.md`, `mocking.md` | passe de poda, redundância entre níveis |
 | `mix-pr` | — | — | nomes por padrão com variáveis, estratégias single/per-story/stacked |
 | `mix-retro` | — | `retro` | comentários de PR como entrada |
+| `mix-triage` | — | `triage` (+ `AGENT-BRIEF.md`, `OUT-OF-SCOPE.md`) | labels e acesso do tracker via `mix.yml`, modo só-leitura, verificação em worktree, multi-repo |
+| `mix-diagnose` | — | `diagnosing-bugs` (+ script HITL) | contexto do projeto e notas de incidentes, bugs entre repos/contratos, sem commit/push sem aprovação |
+| `mix-wait-what` | — | `wait-what` | — |
+| `mix-migrate` | — | — | migração das estruturas do Spec Kit e do Matt para o layout do mix |
 | `mix-flow` | — | `ask-matt` | — |
 
 Ficaram de fora (use os originais se precisar): `checklist`, `taskstoissues` (coberto pelo
-`/mix-tasks`) do Spec Kit; `diagnosing-bugs`, `prototype`, `triage`, `wayfinder`, `research` e
-afins do Matt Pocock. As extensões/hooks e os scripts bash/PowerShell do Spec Kit também foram
-removidos: as skills são autocontidas e não dependem do CLI `specify` nem de git.
+`/mix-tasks`) do Spec Kit; `prototype`, `wayfinder`, `research` e afins do Matt Pocock. As
+extensões/hooks e os scripts bash/PowerShell do Spec Kit também foram removidos: as skills são autocontidas e não dependem do CLI `specify` nem de git.
 
 ## Licença
 

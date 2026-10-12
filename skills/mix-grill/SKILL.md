@@ -61,18 +61,19 @@ _Why it matters_: <one sentence: what goes wrong or changes depending on the ans
   in a running list when grilling stands alone.
 - When an answer resolves a domain term, follow the glossary rule below.
 - Recompute the frontier: settled decisions unblock new ones.
-- Challenge contradictions immediately: with earlier answers, with `GLOSSARY.md`, or with the
+- Challenge contradictions immediately: with earlier answers, with the glossary, or with the
   code ("the code cancels whole Orders, but you said partial cancellation is possible: which?").
 
 ## Glossary and ADRs
 
-Paths come from the project context (`mix-scope`); defaults `GLOSSARY.md` and `docs/adr/`.
+Both live in the project's `mix-dev-skills/` folder (resolved by `mix-scope`): `glossary.md` and
+`adr/`.
 
 - When the user uses a vague or overloaded term ("account" for both Customer and User), propose one
-  canonical term. Once agreed, add it to the glossary (create it lazily) as
+  canonical term. Once agreed, add it to `mix-dev-skills/glossary.md` (create it lazily) as
   `**Term**: one or two sentence definition` plus `_Avoid_: synonyms`. Only project-specific
   domain concepts belong there, never implementation details.
-- Offer an ADR (`NNNN-slug.md` in the ADR folder) only when a decision is hard to reverse, surprising
+- Offer an ADR (`mix-dev-skills/adr/NNNN-slug.md`) only when a decision is hard to reverse, surprising
   without context, and the result of a real trade-off. An ADR can be one paragraph: context,
   decision, why.
 

@@ -30,7 +30,7 @@ The baseline the Standards axis applies even when the repo documents nothing. Ea
   file of its kind. → mirror the exemplar.
 - **Inconsistent errors**: errors raised, logged, or surfaced differently from the rest of the
   layer. → follow the layer's convention.
-- **Vocabulary drift**: names that use synonyms instead of `GLOSSARY.md` terms. → rename.
+- **Vocabulary drift**: names that use synonyms instead of the project glossary's terms. → rename.
 - **Magic values** where the repo has constants, enums, or config for them. → use them.
 
 ## Over-engineering

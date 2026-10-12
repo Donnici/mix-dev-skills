@@ -15,9 +15,8 @@ user (e.g. "use the existing queue"); treat it as decided.
 several) and the paths to the constitution, architecture docs, glossary, ADRs, and specs folder.
 A git repo is not required.
 
-**Feature**: the folder passed as argument; else the one whose spec **Delivery** line names the
-current git branch; else `feature_directory` in the project folder's `.specify/feature.json`
-(Spec Kit); else the most recently modified feature folder. Confirm it in one line. No `spec.md` →
+**Feature**: the folder in the project's `specs/` passed as argument; else the one whose spec
+**Delivery** line names the current git branch; else the most recently modified one. Confirm it in one line. No `spec.md` →
 stop and point to `/mix-specify`.
 
 ## 1. Load
@@ -48,7 +47,7 @@ Dispatch read-only subagents in parallel, one per repo affected when there are s
 - The golden files for each kind of file this plan will add.
 
 Fill **Prior Art & Reuse** and **Technical Context** in `plan.md` (template:
-[plan-template.md](plan-template.md)). Done when every capability the spec needs maps to existing
+`mix-dev-skills/templates/plan.md` when the project has one, else [plan-template.md](plan-template.md)). Done when every capability the spec needs maps to existing
 code, an installed library, or an explicit "new" with a reason.
 
 ## 4. Constitution gate

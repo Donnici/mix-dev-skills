@@ -14,9 +14,8 @@ someone who has worked there for years: same patterns, same libraries, no noise.
 several) and the paths to the constitution, architecture docs, glossary, ADRs, and specs folder.
 A git repo is not required.
 
-**Feature**: the folder passed as argument; else the one whose spec **Delivery** line names the
-current git branch; else `feature_directory` in the project folder's `.specify/feature.json`
-(Spec Kit); else the most recently modified feature folder. Confirm it in one line. No
+**Feature**: the folder in the project's `specs/` passed as argument; else the one whose spec
+**Delivery** line names the current git branch; else the most recently modified one. Confirm it in one line. No
 `tasks.md` → point to `/mix-tasks`. An optional task range limits the run (`T001-T010`, `US1`).
 
 ## Hard rule: nothing leaves the machine

@@ -14,9 +14,8 @@ writes no files. It ends by offering remediation edits, which happen only if the
 several) and the paths to the constitution, architecture docs, glossary, ADRs, and specs folder.
 A git repo is not required.
 
-**Feature**: the folder passed as argument; else the one whose spec **Delivery** line names the
-current git branch; else `feature_directory` in the project folder's `.specify/feature.json`
-(Spec Kit); else the most recently modified feature folder. Requires `spec.md`, `plan.md`, and
+**Feature**: the folder in the project's `specs/` passed as argument; else the one whose spec
+**Delivery** line names the current git branch; else the most recently modified one. Requires `spec.md`, `plan.md`, and
 `tasks.md`; if one is missing, name the skill that creates it.
 
 ## 1. Build inventories
