@@ -1,0 +1,13 @@
+{
+  "name": "mix-dev-skills",
+  "owner": { "name": "Donnici" },
+  "description": "Spec-driven development skills for Claude Code.",
+  "plugins": [
+    {
+      "name": "mix-dev-skills",
+      "source": "./",
+      "description": "Spec Kit flow + Matt Pocock's skills, merged: scope, setup, constitution, specify, clarify, plan, tasks, analyze, implement, review, PRs, retro.",
+      "category": "engineering"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "mix-dev-skills",
+  "version": "0.1.0",
+  "description": "Spec-driven development skills: Spec Kit's flow merged with Matt Pocock's engineering skills, plus repo setup, multi-project scopes, rules, PR conventions, and AI-smell code review.",
+  "author": { "name": "Donnici" },
+  "repository": "https://github.com/Donnici/mix-dev-skills",
+  "license": "MIT",
+  "keywords": ["spec-driven", "spec-kit", "skills", "code-review", "tdd", "constitution"]
+}
