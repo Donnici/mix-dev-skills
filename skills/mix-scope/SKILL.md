@@ -27,8 +27,8 @@ The layout under the base is fixed:
 │   ├── adr/NNNN-slug.md         hard-to-reverse decisions
 │   ├── out-of-scope/<concept>.md   rejected requests (mix-triage)
 │   ├── triage/<issue>.md        local triage drafts (read-only trackers)
-│   └── templates/               optional overrides: spec.md, plan.md, tasks.md,
-│                                constitution.md, architecture.md, system.md
+│   └── templates/               optional overrides: spec.md, quick-spec.md, plan.md,
+│                                tasks.md, constitution.md, architecture.md, system.md
 └── specs/NNN-slug/              spec.md, plan.md, tasks.md, checklists/, delivery.md
 ```
 

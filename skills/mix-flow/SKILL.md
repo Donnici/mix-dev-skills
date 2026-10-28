@@ -84,7 +84,13 @@ review works from the files the feature touched.
 
 ## Small changes
 
-A bug fix or a one-file change doesn't need the full flow. Implement directly, then run
+**`/mix-quick-implement <change or issue>`**: one behaviour, a handful of files, no new contract
+or dependency. One command runs it end to end: locate the code, confirm today's behaviour, a single
+check-in (change, test, decisions with recommended answers, branch and commit), a short
+`spec.md`, test-first implementation, hardening, and the outcome written back to the spec. A
+change that outgrows the size gate is routed to `/mix-specify --quick` with the draft spec.
+
+A trivial edit (typo, copy, config value) can skip even that: implement directly, then
 `/mix-review` on the diff. The constitution and architecture docs still apply.
 
 ## Anytime

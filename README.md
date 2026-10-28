@@ -19,6 +19,10 @@ ignora os padrões e as bibliotecas que o repositório já usa.
 /mix-pr push | pr   (só quando você pede)  →  /mix-review  →  /mix-retro (comentários viram regras)
 ```
 
+Mudança pequena (um comportamento, poucos arquivos, sem contrato nem dependência nova)? Use
+`/mix-quick-implement "<issue>"`: um comando, uma rodada de perguntas, spec curta em `specs/` e
+implementação com teste até o fim.
+
 | Skill | O que faz | Tipo |
 |-------|-----------|------|
 | `/mix-scope` | Mostra, troca (`/mix-scope lumen`), lista ou cria projetos no hub. Todas as outras skills resolvem o contexto por ela. | comando + automática |
@@ -30,6 +34,7 @@ ignora os padrões e as bibliotecas que o repositório já usa.
 | `/mix-tasks` | Fatias verticais por história; dentro da história: contrato → provider → consumer → integração; cada task com repo, arquivo, exemplar e bloqueios; cria/coleta tickets. | comando |
 | `/mix-analyze` | Consistência spec ↔ plan ↔ tasks, somente leitura. | comando |
 | `/mix-implement` | Implementa task a task em cada repo, lendo o exemplar antes e respeitando os contratos; ao fim de cada entrega: poda de testes, limpeza de comentários, self-review e **commit local só com sua aprovação**. Nunca faz push nem abre PR. | comando |
+| `/mix-quick-implement` | Atalho para mudanças pequenas: localiza o código, confirma o comportamento atual, faz **um único check-in** (mudança, teste, decisões com resposta recomendada, branch e commit), escreve uma spec curta, implementa test-first, faz a poda e registra o resultado na spec. Mudança que cresce é encaminhada ao `/mix-specify --quick` sem perder o que foi levantado. | comando |
 | `/mix-review` | Revisão em 3 eixos (Padrões, Spec, Testes) em subagentes paralelos, com verificação de cada achado; corrige, gera tasks de convergência ou comenta no PR. | comando + automática |
 | `/mix-pr` | Dono das convenções de branch, commit e PR (single, por história, ou empilhado; um PR por repo). Push e PR só quando você pede explicitamente. | comando + automática |
 | `/mix-retro` | Transforma comentários recorrentes de PR em lint/CI, regras ou contexto. | comando |
@@ -191,6 +196,7 @@ As duas ficam na raiz do repo (in-repo) ou na pasta do projeto dentro do hub:
 │   ├── triage/                  rascunhos de triagem (tracker só-leitura)
 │   └── templates/               templates próprios do projeto (sobrepõem os padrão)
 └── specs/NNN-slug/              spec.md, plan.md, tasks.md, checklists/, delivery.md
+                                 (no /mix-quick-implement, só um spec.md curto com o Outcome)
 
 <hub>/mix-dev-skills/hub.yml     projetos (nome → pasta) + ativo
 ~/.mix-dev-skills/registry.yml   hubs conhecidos (para achar o projeto a partir do repo de código)
@@ -215,6 +221,7 @@ As duas ficam na raiz do repo (in-repo) ou na pasta do projeto dentro do hub:
 | `mix-pr` | — | — | nomes por padrão com variáveis, estratégias single/per-story/stacked |
 | `mix-retro` | — | `retro` | comentários de PR como entrada |
 | `mix-triage` | — | `triage` (+ `AGENT-BRIEF.md`, `OUT-OF-SCOPE.md`) | labels e acesso do tracker via `mix.yml`, modo só-leitura, verificação em worktree, multi-repo |
+| `mix-quick-implement` | `specify`, `implement` (compactados) | `diagnosing-bugs` (sinal antes do fix), `tdd` | gate de tamanho, check-in único, spec curta com Outcome |
 | `mix-diagnose` | — | `diagnosing-bugs` (+ script HITL) | contexto do projeto e notas de incidentes, bugs entre repos/contratos, sem commit/push sem aprovação |
 | `mix-wait-what` | — | `wait-what` | — |
 | `mix-migrate` | — | — | migração das estruturas do Spec Kit e do Matt para o layout do mix |
