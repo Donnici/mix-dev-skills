@@ -35,7 +35,7 @@ implementação com teste até o fim.
 | `/mix-analyze` | Consistência spec ↔ plan ↔ tasks; só grava o `state.yml`. | comando |
 | `/mix-implement` | Implementa task a task em cada repo, lendo o exemplar antes e respeitando os contratos; ao fim de cada entrega: poda de testes, limpeza de comentários, self-review e **commit local só com sua aprovação**. Nunca faz push nem abre PR. | comando |
 | `/mix-quick-implement` | Atalho para mudanças pequenas: localiza o código, confirma o comportamento atual, faz **um único check-in** (mudança, teste, decisões com resposta recomendada, branch e commit), escreve uma spec curta, implementa test-first, faz a poda e registra o resultado na spec. Mudança que cresce é encaminhada ao `/mix-specify --quick` sem perder o que foi levantado. | comando |
-| `/mix-review` | Revisão em 3 eixos (Padrões, Spec, Testes) em subagentes paralelos, com verificação de cada achado; corrige, gera tasks de convergência ou comenta no PR. | comando + automática |
+| `/mix-review` | Revisão em 3 eixos (Padrões, Spec, Testes) em subagentes paralelos, com verificação de cada achado; corrige, gera tasks de convergência ou comenta no PR; com `--report`, só lê e devolve as sugestões num bloco JSON, sem perguntar, alterar ou publicar nada. | comando + automática |
 | `/mix-pr` | Dono das convenções de branch, commit e PR (single, por história, ou empilhado; um PR por repo). Push e PR só quando você pede explicitamente. | comando + automática |
 | `/mix-retro` | Transforma comentários recorrentes de PR em lint/CI, regras ou contexto. | comando |
 | `/mix-triage` | Triagem de issues (e PRs externos): categoria e estado, duplicidade e rejeições anteriores, reprodução, grill e brief pronto para agente. Nada é escrito no tracker sem confirmação; tracker só-leitura gera rascunhos locais. | comando |
@@ -232,7 +232,7 @@ As duas ficam na raiz do repo (in-repo) ou na pasta do projeto dentro do hub:
 | `mix-tasks` | `tasks` (formato, fases por história, [P]) | `to-tickets` (fatias verticais, bloqueios, prefactor, expand–contract) | exemplar por task, fase de hardening, tickets por história |
 | `mix-analyze` | `analyze` | — | checagens de reuso, exemplar e testes redundantes |
 | `mix-implement` | `implement` (gate de checklists, fases, marcar [X]) | `implement`, `tdd` | leitura de exemplar por task, poda de testes, passe de comentários, ship por história |
-| `mix-review` | `converge` (missing/partial/contradicts/unrequested, append-only) | `code-review` (eixos em paralelo, smells do Fowler) | eixo de Testes, AI-smells, verificação de achados, `--fix/--tasks/--comment` |
+| `mix-review` | `converge` (missing/partial/contradicts/unrequested, append-only) | `code-review` (eixos em paralelo, smells do Fowler) | eixo de Testes, AI-smells, verificação de achados, `--fix/--tasks/--comment/--report` |
 | `mix-testing` | — | `tdd`, `tests.md`, `mocking.md` | passe de poda, redundância entre níveis |
 | `mix-pr` | — | — | nomes por padrão com variáveis, estratégias single/per-story/stacked |
 | `mix-retro` | — | `retro` | comentários de PR como entrada |
