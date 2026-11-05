@@ -1,7 +1,7 @@
 ---
 name: mix-review
 description: Review a PR, branch, or working diff on three axes (Standards against the constitution and repo patterns, Spec against the feature spec, Tests for redundancy and coupling), verify each finding, then fix, append convergence tasks, or post PR comments. Use when the user asks to review code, a PR, or changes since a point, or when mix-implement self-reviews.
-argument-hint: "[PR number | branch | ref] [--fix | --tasks | --comment]"
+argument-hint: "[PR number | branch | ref] [--fix | --tasks | --comment | --report]"
 ---
 
 # Review
@@ -12,6 +12,9 @@ Review a diff on three separate axes, each in its own subagent so one axis can't
   existing patterns, and is it free of the AI smells in [AI-SMELLS.md](AI-SMELLS.md)?
 - **Spec**: does it implement what the spec and tasks asked, no less and no more?
 - **Tests**: does each test earn its place?
+
+With `--report`, follow [Report-only mode](#report-only-mode) as well: its rules override the steps
+below wherever they differ.
 
 ## 1. Pin the diff
 
@@ -123,3 +126,41 @@ With a flag, do that; otherwise ask which (several may apply):
 
 If the same kind of finding keeps appearing across reviews, suggest `/mix-retro` to turn it into
 a rule or an automated check.
+
+## Report-only mode
+
+`--report` runs inside a read-only run started by another program: nobody answers, and every write
+is refused. It covers steps 1 to 5 and replaces step 6.
+
+- **Ask nothing.** Wherever a step would ask, take the path it gives for no answer. No spec found →
+  skip the Spec axis and say so in the report.
+- **Change nothing.** Edit no file, including `tasks.md` and `state.yml`, and run no git command that
+  writes. Publish nothing, and ignore `--fix`, `--tasks` and `--comment`.
+- **Read the context folder instead of `gh`.** The prompt names a folder holding `pr.json` (the PR's
+  metadata) and `pr.diff` (its diff; files with no patch are listed by name). Pin the diff from
+  them and use no `gh` command and no network. Read a full file with `git show <sha>:<path>`, using
+  the head sha from `pr.json`; when that fails, review from `pr.diff` alone and say so in the report.
+  Run git from the working directory, with the verb right after `git`: `cd` first, `-C` or any other
+  option before the verb is refused.
+- **Without subagents or `mix-scope`**, run the axes one after another. Take `mix-dev-skills/` and
+  `specs/` from the project folder when the prompt names one (a hub project keeps them in the hub),
+  otherwise from the working directory. A source that is missing is skipped and named in the report.
+
+End the answer with the findings block, as the last thing in the text, after the step 5 report. Write
+one object per finding that survived step 4, in step 4's order of severity, and `[]` when there are
+none:
+
+````text
+```mix-review-findings
+[{ "path": "src/a.ts", "line": 12, "side": "RIGHT", "severity": "blocking", "text": "What is wrong and why.", "fix": "What to change." }]
+```
+````
+
+- `path`: the file, relative to the repo root. Required.
+- `line` and `side`: the line in the diff, with `RIGHT` for the new version and `LEFT` for the old.
+  Omit both for a finding on no single line.
+- `severity`: `blocking`, `should_fix` or `nit`. Required.
+- `text` and `fix`: the finding and the proposed correction. Both required.
+
+Done when the last thing in the answer is a block of valid JSON, and no file and nothing on the PR
+changed during the run.
