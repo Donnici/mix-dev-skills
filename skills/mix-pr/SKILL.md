@@ -101,4 +101,16 @@ finds one, else:
 ```
 
 Keep it short; reviewers read the diff. `gh pr create --base <base> --title ... --body-file ...`
-(draft for macro PRs). Record each PR URL in the story's Delivery line.
+(draft for macro PRs). Record each PR URL in the story's Delivery line, and append it under `prs`
+in `state.yml` in the feature folder, next to `spec.md`:
+
+```yaml
+prs:
+  - https://github.com/acme/web/pull/5
+```
+
+File missing → create it with only `prs`. File present → add the URL to the list and keep every
+other key (such as `status` and `next_step`) and comment. A PR that was only printed or planned
+(no git, no `gh`/`glab`) writes nothing there.
+
+**Done when** the Delivery line and `prs` list every PR opened.

@@ -43,7 +43,7 @@ rewritten.
 | `docs/agents/issue-tracker.md` | `tracker.type`, `tracker.notes`, `tracker.triage_prs` in `mix.yml` | config |
 | `docs/agents/triage-labels.md` | `tracker.labels` in `mix.yml` | config |
 | `docs/agents/domain.md` | — | remove (the mix layout replaces it) |
-| `.scratch/<feature>/` spec or plan file | `specs/NNN-<feature>/spec.md` | move; numbered after existing specs; mark the spec `Status: Migrated` so `/mix-clarify` normalises it |
+| `.scratch/<feature>/` spec or plan file | `specs/NNN-<feature>/spec.md` | move; numbered after existing specs; leave it without `state.yml` and run `/mix-clarify` to normalise it |
 | `.scratch/<feature>/issues/NN-*.md` | `specs/NNN-<feature>/tickets/NN-*.md` | move |
 | `## Agent skills` block in `CLAUDE.md` / `AGENTS.md` | — | remove; the mix pointer block replaces it |
 | Project-local Matt skill copies (`.claude/skills/<skill>/`, `.agents/skills/...`) | — | remove only if the user asks (they may still use them) |

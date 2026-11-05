@@ -70,8 +70,23 @@ After every accepted answer:
 If `checklists/requirements.md` exists, re-evaluate each checkbox against the updated spec and
 toggle only the markers whose state changed. Note before/after pass counts.
 
-## 6. Report
+## 6. Record state
+
+Write `state.yml` in the feature folder, next to `spec.md`, creating it when missing:
+
+```yaml
+status: Clarified
+next_step: /mix-plan
+```
+
+`next_step` is `/mix-clarify` if high-impact items are still Outstanding, else `/mix-plan`. When
+the file exists, change only these two values and keep every other key (such as `prs`) and comment.
+
+**Done when** `state.yml` holds these values and the report names the same next step.
+
+## 7. Report
 
 Questions asked and answered; sections touched; checklist before → after; a coverage table per
-category (Resolved / Clear / Deferred / Outstanding); and a recommendation: `/mix-plan` now, or
+category (Resolved / Clear / Deferred / Outstanding); and a recommendation, the same as
+`next_step`: `/mix-plan` now, or
 another `/mix-clarify` pass if high-impact items are still Outstanding.

@@ -26,8 +26,8 @@ map for multi-repo projects, and each repo's doc), and the knowledge notes relat
 feature (architecture decisions, integration notes, known constraints). If they are missing, say that plans are much weaker
 without them and recommend `/mix-setup` first; continue only if the user says so.
 
-If the spec still has `[NEEDS CLARIFICATION]` markers on material decisions, stop and recommend
-`/mix-clarify`.
+If the spec still has `[NEEDS CLARIFICATION]` markers on material decisions, set `next_step:
+/mix-clarify` in the feature's `state.yml` (keep the other keys), stop, and recommend `/mix-clarify`.
 
 ## 2. Decide which repos change
 
@@ -83,7 +83,21 @@ contracts inline unless they are long; then split into `data-model.md` and `cont
 The plan contains decisions and interfaces, not implementation code. Small snippets are allowed
 only where a type shape or state machine says it more precisely than prose.
 
-## 7. Report
+## 7. Record state
+
+Write `state.yml` in the feature folder, next to `spec.md`, creating it when missing:
+
+```yaml
+status: Planned
+next_step: /mix-tasks
+```
+
+When the file exists, change only these two values and keep every other key (such as `prs`)
+and comment.
+
+**Done when** `state.yml` holds these values and the report names the same next step.
+
+## 8. Report
 
 Plan path, repos affected, contracts defined, reuse highlights (what is being reused instead of written), new dependencies (if any),
 constitution status, agreed seams, ADRs created, and the next step: `/mix-tasks`.

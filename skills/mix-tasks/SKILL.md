@@ -88,8 +88,22 @@ Read the spec's **Delivery** line and the config's `tracker` block.
   branch for `per-story` strategies, resolved through the `mix-pr` naming rules; the feature
   branch for `single`; "none" without git), and the repos it touches (one PR per repo). Update the spec's Delivery line with the codes.
 
-## 6. Report
+## 6. Record state
+
+Write `state.yml` in the feature folder, next to `spec.md`, creating it when missing:
+
+```yaml
+status: Tasked
+next_step: /mix-analyze
+```
+
+When the file exists, change only these two values and keep every other key (such as `prs`)
+and comment.
+
+**Done when** `state.yml` holds these values and the report names the same next step.
+
+## 7. Report
 
 Path, task count per phase and per story, parallel opportunities, MVP scope, tickets created or
-collected, the branch/PR each story ships in, and the next step: `/mix-analyze` (recommended) or
-`/mix-implement`.
+collected, the branch/PR each story ships in, and the next step: `/mix-analyze` (recommended, the
+same as `next_step`) or `/mix-implement`.

@@ -1,6 +1,6 @@
 # Feature Specification: [FEATURE NAME]
 
-**Feature directory**: `[specs]/[###-feature-name]/` | **Created**: [DATE] | **Status**: Draft
+**Feature directory**: `[specs]/[###-feature-name]/` | **Created**: [DATE]
 
 **Input**: "[original user description]"
 

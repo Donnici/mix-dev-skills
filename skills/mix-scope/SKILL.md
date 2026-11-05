@@ -29,7 +29,7 @@ The layout under the base is fixed:
 │   ├── triage/<issue>.md        local triage drafts (read-only trackers)
 │   └── templates/               optional overrides: spec.md, quick-spec.md, plan.md,
 │                                tasks.md, constitution.md, architecture.md, system.md
-└── specs/NNN-slug/              spec.md, plan.md, tasks.md, checklists/, delivery.md
+└── specs/NNN-slug/              spec.md, plan.md, tasks.md, state.yml, checklists/, delivery.md
 ```
 
 Files are created lazily, when there is something to write. A skill that uses a template looks in

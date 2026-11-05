@@ -1,6 +1,6 @@
 # Quick Change: [TITLE]
 
-**Directory**: `[specs]/[###-short-name]/` | **Created**: [DATE] | **Status**: Draft | **Flow**: quick
+**Directory**: `[specs]/[###-short-name]/` | **Created**: [DATE] | **Flow**: quick
 
 **Input**: "[original issue text or reference]"
 

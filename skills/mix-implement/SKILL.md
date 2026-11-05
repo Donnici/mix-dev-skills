@@ -104,12 +104,29 @@ task with `single`), over that unit's diff in every repo it touched:
    and its story. Fix every blocking finding and every one you agree with; list the rest with your
    reason. Re-run the gates.
 6. **Offer a local commit** (git only): show, per repo, the files and the commit message from the
-   `mix-pr` naming rules, and ask. Commit only on an explicit yes. Then continue to the next story,
+   `mix-pr` naming rules, and ask. When the spec lives in that repo, write `state.yml` first
+   (section 4) and include it. Commit only on an explicit yes. Then continue to the next story,
    or stop if the user declined and the next story needs a different branch.
 
-## 4. Report
+## 4. Record state
+
+Write `state.yml` in the feature folder, next to `spec.md`, creating it when missing, including
+when the run halts early. With open tasks in `tasks.md`, counting every task whatever range this
+run covered:
+
+```yaml
+status: Implementing
+next_step: /mix-implement
+```
+
+With every task done, `status: Implemented` and `next_step: none`. When the file exists, change
+only these two values and keep every other key (such as `prs`) and comment.
+
+**Done when** `state.yml` matches the task count and the report names the same next step.
+
+## 5. Report
 
 Tasks completed; files changed per repo; tests added / deleted / merged in the pruning pass;
 comments removed; review findings fixed vs left (with reasons); local commits made; branches
 ready to push and the command to do it (`/mix-pr push`, `/mix-pr pr`); things noticed out of
-scope; deviations from the plan.
+scope; deviations from the plan; and the next step, the same as `next_step`.

@@ -2,7 +2,7 @@
 name: mix-quick-implement
 description: "Small change, one command: locate the code, confirm today's behaviour, settle every open point in a single check-in, write a short spec, implement test-first, harden, and record the outcome. For changes too small for specify → plan → tasks → implement."
 disable-model-invocation: true
-argument-hint: "<change description or issue reference>"
+argument-hint: "<change description, issue reference, or quick spec folder>"
 ---
 
 # Quick Implement
@@ -13,6 +13,12 @@ short spec that keeps the change visible next to the full-flow specs.
 The text after the command is the change. An issue reference (`#42`, `ABC-123`, a URL) → read
 the issue through the tracker in `mix.yml` (MCP, `gh`, `glab`) and use its body as the input.
 Empty → ask what to change.
+
+A **quick spec folder** (its `spec.md` has `**Flow**: quick`) → resume it: after **Context**, read
+the spec and its `state.yml`, keep the work already in the tree, and continue at section 5 from the
+first step not yet met. Its check-in stands, so sections 1 to 4 are skipped; with no `state.yml` the
+check-in never finished, so send section 4's message first. `status: Implemented` → say so and stop.
+A folder without `**Flow**: quick` → point to `/mix-implement`.
 
 **Context**: call the Skill tool with `mix-scope` for the project: its repos and roles, the
 constitution, architecture docs, glossary, and specs folder. Read the constitution and the
@@ -81,9 +87,8 @@ delivery names are written down.
 
 Create `specs/<NNN-short-name>/spec.md` (next free number, as `/mix-specify` does; `fix-` or
 action-noun short name) from `mix-dev-skills/templates/quick-spec.md` when the project has one,
-else [quick-spec-template.md](quick-spec-template.md). Fill everything except **Outcome**;
-status `Draft`. In a hub, follow its file conventions (e.g. list the spec in the specs
-`index.md`).
+else [quick-spec-template.md](quick-spec-template.md). Fill everything except **Outcome**.
+In a hub, follow its file conventions (e.g. list the spec in the specs `index.md`).
 
 Then send **one** message, everything the user needs to answer in a single reply:
 
@@ -112,8 +117,17 @@ answer in the spec's **Decisions** and update the plan lines it changes.
 
 ## 5. Implement
 
-Status `In progress`. With git and an approved branch, create it through `mix-pr` `branch`
-(never switch branches over uncommitted work: stop and ask). Note the starting commit; without
+Write `state.yml` in the feature folder, next to `spec.md`, creating it when missing:
+
+```yaml
+status: Implementing
+next_step: /mix-quick-implement
+```
+
+When the file exists, change only these two values and keep every other key (such as `prs`)
+and comment.
+
+With git and an approved branch, create it through `mix-pr` `branch` (never switch branches over uncommitted work: stop and ask). Note the starting commit; without
 git, track touched files in the spec's **Outcome**.
 
 1. **Red**: write or extend the test at the agreed seam; run it; see it fail for the right reason.
@@ -121,7 +135,8 @@ git, track touched files in the spec's **Outcome**.
    imports, libraries, and error handling. A comment only for a non-obvious why, in one line.
 3. **Scope**: touch only the planned files. Something else broken becomes a note in **Outcome**.
    A needed file outside the plan is fine when it stays within the size gate; otherwise stop,
-   update the spec with what you found, and route to `/mix-specify --quick`.
+   update the spec with what you found, remove `status` and `next_step` from `state.yml`
+   (keep any other key), since this route has no state value yet, and route to `/mix-specify --quick`.
 
 **Done when** the new test passes and the typecheck and the affected test files run green.
 
@@ -143,16 +158,23 @@ Over this change's diff:
 
 Fill the spec's **Outcome**: files changed per repo, tests added or changed, the verification
 command and its result, the signal from step 2 re-run (for a bug: no longer reproduces), and
-notes out of scope. Status `Done`.
+notes out of scope. Then change the same two values in `state.yml`, keeping everything else:
+
+```yaml
+status: Implemented
+next_step: none
+```
 
 Commit approved at the check-in → call the Skill tool with `mix-pr` `commit` with the agreed
-message, staging the change's files and its spec when the spec lives in the same repo. Not
-approved, or no git → leave the changes in the working tree.
+message, staging the change's files, its spec, and `state.yml` when the spec lives in the same
+repo. Not approved, or no git → leave the changes in the working tree.
 
-**Done when** the spec has an Outcome and status `Done`, and the commit exists or was declined.
+**Done when** the spec has an Outcome, `state.yml` holds `status: Implemented` and
+`next_step: none`, and the commit exists or was declined.
 
 ## 8. Report
 
 Spec path; the change in one sentence; files changed; test added and gates result; commit made
-(or not); assumptions taken; notes out of scope; next step: `/mix-pr push` / `/mix-pr pr` when
-the user chooses, or `/mix-review` for a second look.
+(or not); assumptions taken; notes out of scope; the next step, the same as `next_step`: `none`,
+or `/mix-quick-implement <spec folder>` when stopped before section 7. Optional when the user
+chooses: `/mix-pr push` / `/mix-pr pr`, or `/mix-review` for a second look.

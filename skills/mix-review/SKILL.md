@@ -107,7 +107,16 @@ With a flag, do that; otherwise ask which (several may apply):
 - **`--tasks`**: append a `## Phase N: Convergence` section to the feature's `tasks.md` with one
   task per finding (`- [ ] T0XX <fix> per <FR-003 | Constitution IV | test> (<gap type>)`),
   blocking first, continuing the highest task ID. Existing tasks are never edited. No findings →
-  `tasks.md` stays untouched and the report says "Converged".
+  `tasks.md` and `state.yml` stay untouched and the report says "Converged". With tasks appended,
+  write `state.yml` in the feature folder, next to `spec.md`, creating it when missing:
+
+  ```yaml
+  status: Implementing
+  next_step: /mix-implement
+  ```
+
+  When the file exists, change only these two values and keep every other key (such as `prs`) and
+  comment. Name `/mix-implement` as the next step. Done when `state.yml` holds these values.
 - **`--comment`** (needs a PR and `gh`; only when the user asked for it, never when called by
   another skill): post findings as inline PR review comments. Show the exact comments
   first and post only after the user confirms.

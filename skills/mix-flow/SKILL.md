@@ -45,8 +45,8 @@ creates the constitution with the default rules. Re-run after big structural cha
    between repos first**, module design per repo, agreed test seams → `plan.md`.
 4. **`/mix-tasks`**: vertical slices per story; inside a story: contract → provider → consumer →
    integration; each task tagged with its repo and exemplar → `tasks.md`; tickets per story.
-5. **`/mix-analyze`** *(recommended)*: read-only consistency check, including both sides of every
-   contract.
+5. **`/mix-analyze`** *(recommended)*: consistency check, including both sides of every contract;
+   writes only `state.yml`.
 6. **`/mix-implement`**: builds task by task in each repo; at each delivery boundary prunes tests,
    strips comment noise, self-reviews, and offers a **local** commit. It never pushes or opens PRs.
 7. **`/mix-pr push` / `/mix-pr pr`**: you decide when work leaves the machine; one PR per repo,
@@ -57,6 +57,35 @@ creates the constitution with the default rules. Re-run after big structural cha
 
 Keep steps 1–4 in one session when you can. Start `/mix-implement` in a fresh session for large
 features; `tasks.md` carries everything it needs.
+
+## Spec state and next step
+
+Each flow skill records where the spec stands in `specs/NNN-slug/state.yml`, next to the spec in
+every mode (hub, in-repo, no git), and its report names the same next step:
+
+```yaml
+status: Planned          # Specified | Clarified | Planned | Tasked | Analyzed | Implementing | Implemented
+next_step: /mix-tasks    # /mix-clarify | /mix-plan | /mix-tasks | /mix-analyze | /mix-implement | /mix-quick-implement | none
+prs:                     # optional; added by /mix-pr
+  - https://github.com/acme/web/pull/5
+```
+
+| Skill | `status` | `next_step` |
+|-------|----------|-------------|
+| `/mix-specify` | Specified | `/mix-clarify` if markers or weak areas remain, else `/mix-plan` |
+| `/mix-clarify` | Clarified | `/mix-plan`, or `/mix-clarify` if high-impact items are Outstanding |
+| `/mix-plan` | Planned | `/mix-tasks` |
+| `/mix-tasks` | Tasked | `/mix-analyze` |
+| `/mix-analyze` | Analyzed | `/mix-implement`; with CRITICAL findings, the fixing skill, or `/mix-analyze` when a direct edit fixes them |
+| `/mix-implement`, open tasks | Implementing | `/mix-implement` |
+| `/mix-implement`, every task done | Implemented | `none` |
+| `/mix-review --tasks`, tasks appended | Implementing | `/mix-implement` |
+| `/mix-quick-implement` | Implementing, then Implemented | `/mix-quick-implement`, then `none` |
+
+`/mix-pr pr` appends each PR URL to `prs`, creating the file with only `prs` when missing. Writers
+change only their own keys and keep the others and any comments. An unknown value, or a missing
+`next_step` on a state other than `Implemented`, reads as "not informed". The file is committed
+under the same rule as the spec.
 
 ## Delivery strategies
 
@@ -89,6 +118,7 @@ or dependency. One command runs it end to end: locate the code, confirm today's 
 check-in (change, test, decisions with recommended answers, branch and commit), a short
 `spec.md`, test-first implementation, hardening, and the outcome written back to the spec. A
 change that outgrows the size gate is routed to `/mix-specify --quick` with the draft spec.
+`/mix-quick-implement <quick spec folder>` resumes one at its implementation step.
 
 A trivial edit (typo, copy, config value) can skip even that: implement directly, then
 `/mix-review` on the diff. The constitution and architecture docs still apply.
@@ -114,7 +144,7 @@ A trivial edit (typo, copy, config value) can skip even that: implement directly
 │   ├── out-of-scope/            rejected requests
 │   ├── triage/                  local triage drafts
 │   └── templates/               optional project overrides of the bundled templates
-└── specs/NNN-slug/              spec.md, plan.md, tasks.md, checklists/, delivery.md
+└── specs/NNN-slug/              spec.md, plan.md, tasks.md, state.yml, checklists/, delivery.md
 
 <hub>/mix-dev-skills/hub.yml     projects (name → folder) + active
 ~/.mix-dev-skills/registry.yml   hubs to search when a session starts inside a code repo

@@ -129,8 +129,23 @@ Create `<feature>/checklists/requirements.md` and check the spec against it:
 For each failing item, fix the spec and re-check, up to three passes. Items still failing go into
 a Notes section of the checklist and are reported to the user.
 
-## 7. Report
+## 7. Record state
+
+Write `state.yml` in the feature folder, next to `spec.md`, creating it when missing:
+
+```yaml
+status: Specified
+next_step: /mix-plan
+```
+
+`next_step` is `/mix-clarify` if `[NEEDS CLARIFICATION]` markers or weak areas (such as checklist
+items still failing) remain, else `/mix-plan`. When the file exists, change only these two values
+and keep every other key (such as `prs`) and comment.
+
+**Done when** `state.yml` holds these values and the report names the same next step.
+
+## 8. Report
 
 Feature folder, spec path, delivery (strategy, branch, tickets), checklist result, decisions vs
-assumptions count, glossary terms and ADRs added, and the next step: `/mix-clarify` if markers or
-weak areas remain, else `/mix-plan`.
+assumptions count, glossary terms and ADRs added, and the next step, the same as `next_step`:
+`/mix-clarify` if markers or weak areas remain, else `/mix-plan`.

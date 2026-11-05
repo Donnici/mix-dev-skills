@@ -1,14 +1,14 @@
 ---
 name: mix-analyze
-description: "Read-only consistency check across spec.md, plan.md, and tasks.md before implementing: coverage gaps, contradictions, ambiguity, constitution violations, and missing reuse. Spec Kit's analyze, extended."
+description: "Consistency check across spec.md, plan.md, and tasks.md before implementing, writing only state.yml: coverage gaps, contradictions, ambiguity, constitution violations, and missing reuse. Spec Kit's analyze, extended."
 disable-model-invocation: true
 argument-hint: "[feature dir]"
 ---
 
 # Analyze
 
-Find what would make implementation go wrong, before it starts. **Strictly read-only**: this skill
-writes no files. It ends by offering remediation edits, which happen only if the user approves.
+Find what would make implementation go wrong, before it starts. This skill writes only `state.yml`,
+nothing else. It ends by offering remediation edits, which happen only if the user approves.
 
 **Context**: call the Skill tool with `mix-scope` to resolve the project: its repos (one or
 several) and the paths to the constitution, architecture docs, glossary, ADRs, and specs folder.
@@ -54,7 +54,29 @@ Severity: **CRITICAL** = constitution MUST violation, or a P1 requirement with n
 **MEDIUM** = terminology drift, missing non-functional coverage, redundant test tasks;
 **LOW** = wording and minor redundancy.
 
-## 3. Report
+## 3. Record state
+
+Write `state.yml` in the feature folder, next to `spec.md`, creating it when missing:
+
+```yaml
+status: Analyzed
+next_step: /mix-implement
+```
+
+`next_step` follows the CRITICAL findings:
+
+- None → `/mix-implement`.
+- A skill fixes one → that skill's command: `/mix-clarify`, `/mix-plan`, or `/mix-tasks`. Several
+  skills → the earliest in that order.
+- Only direct edits fix them → `/mix-analyze`, to check again after the edit.
+
+When the file exists, change only these two values and keep every other key (such as `prs`)
+and comment.
+
+**Done when** `state.yml` holds these values, it is the only file written, and the report names the
+same next step.
+
+## 4. Report
 
 ```markdown
 ## Analysis: [feature]
@@ -65,13 +87,15 @@ Severity: **CRITICAL** = constitution MUST violation, or a P1 requirement with n
 **Coverage**: | Requirement | Tasks | Test seam | Notes |
 
 **Metrics**: requirements, tasks, coverage %, critical / high / medium / low counts
+
+**Next step**: <the `next_step` in `state.yml`>
 ```
 
 Stable IDs (category initial + number) so a rerun on unchanged files gives the same report.
 Cite specific lines; report missing sections as missing rather than inventing them.
 
-## 4. Next actions
+## 5. Next actions
 
 CRITICAL present → resolve before `/mix-implement`, naming which skill fixes each
-(`/mix-specify`, `/mix-plan`, `/mix-tasks`, or a direct edit). Otherwise the user may proceed.
+(`/mix-clarify`, `/mix-plan`, `/mix-tasks`, or a direct edit). Otherwise the user may proceed.
 Then ask: "Want concrete remediation edits for the top N findings?" Apply nothing unasked.

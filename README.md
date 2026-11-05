@@ -32,7 +32,7 @@ implementação com teste até o fim.
 | `/mix-clarify` | Varredura de ambiguidades da spec (taxonomia do Spec Kit) + perguntas + atualização da spec. | comando |
 | `/mix-plan` | Quais repos mudam e por quê, inventário de reuso, gate da constituição, **contratos entre repos primeiro** (rota, campos, tipos, erros, auth), design por repo, seams de teste. | comando |
 | `/mix-tasks` | Fatias verticais por história; dentro da história: contrato → provider → consumer → integração; cada task com repo, arquivo, exemplar e bloqueios; cria/coleta tickets. | comando |
-| `/mix-analyze` | Consistência spec ↔ plan ↔ tasks, somente leitura. | comando |
+| `/mix-analyze` | Consistência spec ↔ plan ↔ tasks; só grava o `state.yml`. | comando |
 | `/mix-implement` | Implementa task a task em cada repo, lendo o exemplar antes e respeitando os contratos; ao fim de cada entrega: poda de testes, limpeza de comentários, self-review e **commit local só com sua aprovação**. Nunca faz push nem abre PR. | comando |
 | `/mix-quick-implement` | Atalho para mudanças pequenas: localiza o código, confirma o comportamento atual, faz **um único check-in** (mudança, teste, decisões com resposta recomendada, branch e commit), escreve uma spec curta, implementa test-first, faz a poda e registra o resultado na spec. Mudança que cresce é encaminhada ao `/mix-specify --quick` sem perder o que foi levantado. | comando |
 | `/mix-review` | Revisão em 3 eixos (Padrões, Spec, Testes) em subagentes paralelos, com verificação de cada achado; corrige, gera tasks de convergência ou comenta no PR. | comando + automática |
@@ -178,6 +178,22 @@ planejados vão para `delivery.md` e o review usa a lista de arquivos tocados.
 Push e PR acontecem apenas quando você pede (`/mix-pr push`, `/mix-pr pr`), depois de ver o plano
 exato (repo, branch, base, título e corpo).
 
+## Estado da spec
+
+Cada skill do fluxo grava onde a spec parou em `specs/NNN-slug/state.yml`, ao lado da spec, com ou
+sem git, e o relatório dela informa o mesmo próximo passo:
+
+```yaml
+status: Planned          # Specified | Clarified | Planned | Tasked | Analyzed | Implementing | Implemented
+next_step: /mix-tasks    # /mix-clarify | /mix-plan | /mix-tasks | /mix-analyze | /mix-implement | /mix-quick-implement | none
+prs:                     # opcional; gravado pelo /mix-pr
+  - https://github.com/acme/web/pull/5
+```
+
+Cada skill altera só os próprios campos e mantém o resto do arquivo. O `/mix-pr pr` acrescenta o
+link de cada PR que abre, e `/mix-quick-implement <pasta da spec>` retoma uma spec curta. O campo
+Status saiu dos modelos de spec: o estado fica só neste arquivo.
+
 ## Arquivos gerados
 
 Tudo o que não é spec fica numa pasta `mix-dev-skills/`; as specs ficam em `specs/` ao lado dela.
@@ -195,8 +211,8 @@ As duas ficam na raiz do repo (in-repo) ou na pasta do projeto dentro do hub:
 │   ├── out-of-scope/            pedidos rejeitados (triagem)
 │   ├── triage/                  rascunhos de triagem (tracker só-leitura)
 │   └── templates/               templates próprios do projeto (sobrepõem os padrão)
-└── specs/NNN-slug/              spec.md, plan.md, tasks.md, checklists/, delivery.md
-                                 (no /mix-quick-implement, só um spec.md curto com o Outcome)
+└── specs/NNN-slug/              spec.md, plan.md, tasks.md, state.yml, checklists/, delivery.md
+                                 (no /mix-quick-implement, só um spec.md curto com o Outcome e o state.yml)
 
 <hub>/mix-dev-skills/hub.yml     projetos (nome → pasta) + ativo
 ~/.mix-dev-skills/registry.yml   hubs conhecidos (para achar o projeto a partir do repo de código)
