@@ -27,7 +27,8 @@ feature (architecture decisions, integration notes, known constraints). If they 
 without them and recommend `/mix-setup` first; continue only if the user says so.
 
 If the spec still has `[NEEDS CLARIFICATION]` markers on material decisions, set `next_step:
-/mix-clarify` in the feature's `state.yml` (keep the other keys), stop, and recommend `/mix-clarify`.
+/mix-clarify` in the feature's `state.yml`, keeping the other keys and adding `status: Specified` when
+it has no status, stop, and recommend `/mix-clarify`.
 
 ## 2. Decide which repos change
 

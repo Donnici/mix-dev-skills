@@ -70,6 +70,8 @@ prs:                     # optional; added by /mix-pr
   - https://github.com/acme/web/pull/5
 ```
 
+`none` is valid only with `status: Implemented`. Anywhere else, readers treat the state as not informed.
+
 | Skill | `status` | `next_step` |
 |-------|----------|-------------|
 | `/mix-specify` | Specified | `/mix-clarify` if markers or weak areas remain, else `/mix-plan` |
