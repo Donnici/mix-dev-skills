@@ -22,8 +22,7 @@ A git repo is not required.
 
 This skill **never pushes and never opens, updates, or comments on a PR**, and never asks
 `mix-pr` to. Commits are local and happen only after the user explicitly approves each one. When
-a unit is ready, report it and tell the user they can run `/mix-pr push` / `/mix-pr pr` when
-they choose.
+a unit is ready, report it and tell the user they can run `/mix-pr` when they choose.
 
 ## 1. Load
 
@@ -128,5 +127,5 @@ only these two values and keep every other key (such as `prs`) and comment.
 
 Tasks completed; files changed per repo; tests added / deleted / merged in the pruning pass;
 comments removed; review findings fixed vs left (with reasons); local commits made; branches
-ready to push and the command to do it (`/mix-pr push`, `/mix-pr pr`); things noticed out of
+ready to push and the command to do it (`/mix-pr`); things noticed out of
 scope; deviations from the plan; and the next step, the same as `next_step`.

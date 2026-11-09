@@ -1,7 +1,7 @@
 ---
 name: mix-pr
-description: Name and create branches and commits following the project's patterns, and, only when the user explicitly asks, push and open pull requests (single PR, per-story PRs, or stacked story PRs, one per repo touched). Use when starting a feature or story branch, committing finished work, when the user asks to push or open a PR, and whenever another mix-* skill needs a branch or PR name.
-argument-hint: "[branch | commit | push | pr] [feature dir] [story] [repo]"
+description: Ship work as pull requests in one run, with no approval step - branch, commit, push, and open the PR (one per repo touched; single, per-story, or stacked story PRs), then report each PR's link, title, and body. Also the single owner of branch, commit, and PR naming. Use when the user runs /mix-pr or asks to open a PR, ship, or push, and whenever another mix-* skill needs a branch, a commit, or a name.
+argument-hint: "[branch | commit] [feature dir] [story] [repo]"
 ---
 
 # Branches & PRs
@@ -13,15 +13,46 @@ the config, never from habit.
 `tracker` blocks). Nothing configured → `spec/[NNN]-[slug]`, strategy `single`, PR title
 `[type]: [title]`, conventional commits.
 
-## Nothing leaves the machine without the user
+## Who triggers what
 
-- **branch** and **commit** are local. Another skill may request them; each still shows the name
-  or message and waits for "yes" before running.
-- **push** and **pr** run only when the user asked for them in this conversation, in their own
-  words ("push", "open the PR", `/mix-pr pr`). A request relayed by another skill is never
-  enough: answer it with the exact commands and PR text the user can approve, and stop.
-- Before any push or PR, show per repo: remote, branch, target base, title, and body. Run only
-  after the user confirms that exact plan. One confirmation covers the plan shown, nothing else.
+- **`/mix-pr` (no action), or the user asking in their own words to open a PR, ship, or push**:
+  that request is the approval. Run **ship** end to end with no confirmation step, then show the
+  result. Changes to title or body come afterwards, when the user asks in the chat.
+- **`branch` / `commit` requested by another skill**: local only; the calling skill owns the
+  user's approval. Push and PR never start from another skill's request: answer it with the
+  command to run (`/mix-pr`) and stop.
+
+## Ship (default)
+
+Per repo touched by the current work (repos with no changes get nothing):
+
+1. **Branch**: on the base branch → resolve the name and create it (`branch`). On any other
+   branch → keep it.
+2. **Commit**: uncommitted changes → `commit` them. Files that clearly do not belong to the work
+   (secrets such as `.env`, build output, unrelated strays) stay unstaged and go in the report.
+3. **Push**: `git -C <repo> push -u origin <branch>`.
+4. **PR**: open it (`pr`). A PR already open for the branch → update its title and body instead
+   of opening a second one.
+5. **Report**, per PR:
+
+   ```text
+   <repo> → <PR URL>
+   Title: <title>
+   <body, verbatim>
+   ```
+
+   Then list files left unstaged, and close with: "Want a different title or description? Tell
+   me what to change and I update the PR."
+
+Values that would otherwise be asked (`[ticket]`, unknown variables) are inferred from the
+branch name, spec, or commits; ask only when no source has them, in one question, before step 1.
+`[type]` is inferred without confirmation.
+
+Stop and report only on: a failed push (rejected, no remote), no changes and no commits ahead of
+the base, or a merge conflict. Never force-push.
+
+**Edits after the report**: on request, `gh pr edit <n> --title ... --body-file ...` (or
+`glab mr update`); show the new title and body.
 
 ## Git is optional
 
@@ -48,9 +79,9 @@ Patterns are fixed text plus `[variables]`:
 | `[slug]` | feature short name |
 | `[story]` | story id + short name, e.g. `us1-login` |
 | `[title]` | feature or story title, sentence case |
-| `[type]` | inferred (feat, fix, chore, refactor, docs, test, perf), then confirmed |
-| `[ticket]` | asked; validated against `tracker.key_example` |
-| any other | asked |
+| `[type]` | inferred (feat, fix, chore, refactor, docs, test, perf) |
+| `[ticket]` | from the branch, spec, or commits, else asked; validated against `tracker.key_example` |
+| any other | inferred when a source has it, else asked |
 
 Values already recorded in the spec's **Delivery** line or the story's Delivery line in
 `tasks.md` are reused, never asked twice. Every asked value is written back there.
@@ -69,15 +100,15 @@ From `git.strategy`, unless overridden for this feature in the spec's Delivery l
 
 ## Actions
 
-**branch**: resolve the name, confirm, then in each repo touched
-`git -C <repo> switch -c <name> <base>`. If it exists, offer to switch to it instead.
+**branch**: resolve the name, then in each repo touched `git -C <repo> switch -c <name> <base>`.
+If it exists, switch to it. Never switch over uncommitted work that belongs to another branch.
 
 **commit**: per repo, stage only the files the current task or story touched (check
 `git status` for strays; never stage everything blindly). Message per `commit_style`:
 `conventional` → `<type>(<scope>): <summary>`; `ticket-prefix` → `<ticket> <summary>`; `free` →
 a plain summary. Imperative mood, under 72 characters; a body only for a non-obvious why.
 
-**push**: `git -C <repo> push -u origin <branch>` for each repo in the confirmed plan.
+**push**: `git -C <repo> push -u origin <branch>` for each repo touched.
 
 **pr**: title from `pr_title_pattern`; body from the repo's PR template when `pr_template: auto`
 finds one, else:
@@ -101,7 +132,8 @@ finds one, else:
 ```
 
 Keep it short; reviewers read the diff. `gh pr create --base <base> --title ... --body-file ...`
-(draft for macro PRs). Record each PR URL in the story's Delivery line, and append it under `prs`
+(draft for macro PRs); GitLab → `glab mr create`; other hosts (Bitbucket, etc.) without a CLI →
+print the title and body and the create-PR URL for the remote. Record each PR URL in the story's Delivery line, and append it under `prs`
 in `state.yml` in the feature folder, next to `spec.md`:
 
 ```yaml
@@ -113,4 +145,5 @@ File missing → create it with only `prs`. File present → add the URL to the 
 other key (such as `status` and `next_step`) and comment. A PR that was only printed or planned
 (no git, no `gh`/`glab`) writes nothing there.
 
-**Done when** the Delivery line and `prs` list every PR opened.
+**Done when** every repo touched has its PR open, the Delivery line and `prs` list them, and the
+report shows each PR's link, title, and body.

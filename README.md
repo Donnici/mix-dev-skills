@@ -16,7 +16,7 @@ ignora os padrões e as bibliotecas que o repositório já usa.
    spec.md        perguntas      plan.md     tasks.md      checagem      código + commit local
                                  contratos   por repo                    (nunca push/PR)
     ▼
-/mix-pr push | pr   (só quando você pede)  →  /mix-review  →  /mix-retro (comentários viram regras)
+/mix-pr   (branch, commit, push e PR de uma vez)  →  /mix-review  →  /mix-retro (comentários viram regras)
 ```
 
 Mudança pequena (um comportamento, poucos arquivos, sem contrato nem dependência nova)? Use
@@ -36,7 +36,7 @@ implementação com teste até o fim.
 | `/mix-implement` | Implementa task a task em cada repo, lendo o exemplar antes e respeitando os contratos; ao fim de cada entrega: poda de testes, limpeza de comentários, self-review e **commit local só com sua aprovação**. Nunca faz push nem abre PR. | comando |
 | `/mix-quick-implement` | Atalho para mudanças pequenas: localiza o código, confirma o comportamento atual, faz **um único check-in** (mudança, teste, decisões com resposta recomendada, branch e commit), escreve uma spec curta, implementa test-first, faz a poda e registra o resultado na spec. Mudança que cresce é encaminhada ao `/mix-specify --quick` sem perder o que foi levantado. | comando |
 | `/mix-review` | Revisão em 3 eixos (Padrões, Spec, Testes) em subagentes paralelos, com verificação de cada achado; corrige, gera tasks de convergência ou comenta no PR; com `--report`, só lê e devolve as sugestões num bloco JSON, sem perguntar, alterar ou publicar nada. | comando + automática |
-| `/mix-pr` | Dono das convenções de branch, commit e PR (single, por história, ou empilhado; um PR por repo). Push e PR só quando você pede explicitamente. | comando + automática |
+| `/mix-pr` | Um comando, sem aprovação: cria a branch, faz commit, push e abre o PR (um por repo; single, por história ou empilhado) e mostra link, título e descrição. Quer mudar? Peça no chat que ele edita o PR. Também é dono das convenções de nomes. | comando + automática |
 | `/mix-retro` | Transforma comentários recorrentes de PR em lint/CI, regras ou contexto. | comando |
 | `/mix-triage` | Triagem de issues (e PRs externos): categoria e estado, duplicidade e rejeições anteriores, reprodução, grill e brief pronto para agente. Nada é escrito no tracker sem confirmação; tracker só-leitura gera rascunhos locais. | comando |
 | `mix-diagnose` | Bugs difíceis e regressões de performance: primeiro um loop de feedback que fica vermelho no bug, depois hipóteses, instrumentação, fix com teste de regressão e limpeza. Funciona entre repos. | comando + automática |
@@ -102,8 +102,8 @@ Configurado no `/mix-setup`, ajustável por feature no `/mix-specify`:
 - **Padrão de branch**: texto fixo + `[variáveis]`. Padrão default `spec/[NNN]-[slug]`
   (ex.: `spec/001-alpha-login`). Presets: `[type]/[slug]` (feat, fix, chore...),
   `[type]/[ticket]-[slug]`, ou personalizado, ex.: `jane/[ticket]`.
-  `[NNN]`, `[slug]` e `[story]` são preenchidas sozinhas; `[type]` é inferida e confirmada;
-  `[ticket]` e qualquer variável personalizada são **sempre perguntadas** quando necessárias.
+  `[NNN]`, `[slug]` e `[story]` são preenchidas sozinhas; `[type]` é inferida;
+  `[ticket]` e variáveis personalizadas vêm da branch, spec ou commits; só são perguntadas quando nada as traz.
 - **Estratégia de entrega**:
   - `single`: uma branch e um PR para a feature toda ("implemente com este código de branch").
   - `per-story`: uma branch e um PR por história, direto na base, em entregas pequenas e contínuas.
@@ -175,8 +175,9 @@ planejados vão para `delivery.md` e o review usa a lista de arquivos tocados.
 ## Nada sobe sem você
 
 `/mix-implement` nunca faz push nem abre PR, e só faz commit local depois que você aprova cada um.
-Push e PR acontecem apenas quando você pede (`/mix-pr push`, `/mix-pr pr`), depois de ver o plano
-exato (repo, branch, base, título e corpo).
+Push e PR acontecem apenas quando você roda `/mix-pr` (ou pede no chat): ele faz branch, commit,
+push e PR de uma vez, sem pedir confirmação, e mostra o link, o título e a descrição de cada PR.
+Para ajustar título ou descrição, peça no chat.
 
 ## Estado da spec
 
@@ -190,7 +191,7 @@ prs:                     # opcional; gravado pelo /mix-pr
   - https://github.com/acme/web/pull/5
 ```
 
-Cada skill altera só os próprios campos e mantém o resto do arquivo. O `/mix-pr pr` acrescenta o
+Cada skill altera só os próprios campos e mantém o resto do arquivo. O `/mix-pr` acrescenta o
 link de cada PR que abre, e `/mix-quick-implement <pasta da spec>` retoma uma spec curta. O campo
 Status saiu dos modelos de spec: o estado fica só neste arquivo.
 

@@ -177,4 +177,4 @@ repo. Not approved, or no git → leave the changes in the working tree.
 Spec path; the change in one sentence; files changed; test added and gates result; commit made
 (or not); assumptions taken; notes out of scope; the next step, the same as `next_step`: `none`,
 or `/mix-quick-implement <spec folder>` when stopped before section 7. Optional when the user
-chooses: `/mix-pr push` / `/mix-pr pr`, or `/mix-review` for a second look.
+chooses: `/mix-pr`, or `/mix-review` for a second look.

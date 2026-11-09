@@ -49,8 +49,9 @@ creates the constitution with the default rules. Re-run after big structural cha
    writes only `state.yml`.
 6. **`/mix-implement`**: builds task by task in each repo; at each delivery boundary prunes tests,
    strips comment noise, self-reviews, and offers a **local** commit. It never pushes or opens PRs.
-7. **`/mix-pr push` / `/mix-pr pr`**: you decide when work leaves the machine; one PR per repo,
-   linked to its siblings with the merge order.
+7. **`/mix-pr`**: you decide when work leaves the machine; one run creates the branch, commits,
+   pushes, and opens one PR per repo (linked to its siblings with the merge order), with no
+   approval step, then shows each PR's link, title, and body.
 8. **`/mix-review`**: on any PR or branch, across repos. `--tasks` appends convergence tasks; run
    `/mix-implement` again to close them.
 9. **`/mix-retro <PR#>`**: turn repeated review comments into checks and rules.
@@ -84,7 +85,7 @@ prs:                     # optional; added by /mix-pr
 | `/mix-review --tasks`, tasks appended | Implementing | `/mix-implement` |
 | `/mix-quick-implement` | Implementing, then Implemented | `/mix-quick-implement`, then `none` |
 
-`/mix-pr pr` appends each PR URL to `prs`, creating the file with only `prs` when missing. Writers
+`/mix-pr` appends each PR URL to `prs`, creating the file with only `prs` when missing. Writers
 change only their own keys and keep the others and any comments. An unknown value, or a missing
 `next_step` on a state other than `Implemented`, reads as "not informed". The file is committed
 under the same rule as the spec.

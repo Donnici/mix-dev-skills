@@ -36,7 +36,7 @@ git:
   base_branch: main         # per-repo override: add base_branch to a repo entry
   # Fixed text stays as written; [brackets] are variables.
   # Filled automatically: [NNN] feature number, [slug] short name, [story] story slug (us1-login).
-  # Inferred then confirmed: [type] feat|fix|chore|refactor|docs|test|perf.
+  # Inferred: [type] feat|fix|chore|refactor|docs|test|perf.
   # Asked every time: [ticket] and any other variable.
   branch_pattern: "spec/[NNN]-[slug]"
   story_branch_pattern: "spec/[NNN]-[story]"
