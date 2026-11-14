@@ -131,7 +131,10 @@ A trivial edit (typo, copy, config value) can skip even that: implement directly
 - **`/mix-constitution <rule>`**: add or change a rule.
 - **`mix-grill`**: "grill me on this" for any plan or design.
 - **`mix-testing`**: how to choose seams and which tests to delete.
-- **`/mix-wait-what`**: the last message didn't land; re-pitch it plainly, in glossary terms.
+- **`/mix-explain [spec NNN | adr NNNN | path | url | topic]`**: a clear, sourced explanation in
+  plain technical Portuguese; with no argument, of the agent's last answer.
+- **`/mix-self-improve`**: how you use Claude, strengths and friction from `/insights` and your
+  sessions, and improvements (rules, skills, hooks, routines) applied on approval.
 
 ## Files
 

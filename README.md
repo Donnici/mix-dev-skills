@@ -40,7 +40,8 @@ implementação com teste até o fim.
 | `/mix-retro` | Transforma comentários recorrentes de PR em lint/CI, regras ou contexto. | comando |
 | `/mix-triage` | Triagem de issues (e PRs externos): categoria e estado, duplicidade e rejeições anteriores, reprodução, grill e brief pronto para agente. Nada é escrito no tracker sem confirmação; tracker só-leitura gera rascunhos locais. | comando |
 | `mix-diagnose` | Bugs difíceis e regressões de performance: primeiro um loop de feedback que fica vermelho no bug, depois hipóteses, instrumentação, fix com teste de regressão e limpeza. Funciona entre repos. | comando + automática |
-| `/mix-wait-what` | "Não entendi": reexplica a última mensagem com contexto, em linguagem simples e com os termos do glossário. | comando |
+| `/mix-explain` | Explica algo em português técnico claro: uma spec com plano, tasks e evidências (`/mix-explain spec 0014`), um ADR, um arquivo, uma doc, uma URL ou um tema. Sem argumento, explica a última resposta do agente. Não grava nada. | comando |
+| `/mix-self-improve` | Lê o relatório do `/insights`, o histórico de sessões e o seu setup (CLAUDE.md, skills, hooks, MCP, settings); explica como você usa o Claude, pontos positivos e negativos, novos jeitos de usar, e propõe melhorias com evidência (regras, skills, hooks, rotinas), aplicadas uma a uma com sua aprovação. `routine` roda sem perguntas. | comando |
 | `/mix-migrate` | Move a estrutura do Spec Kit e das skills do Matt para o layout do mix (`mix-dev-skills/` + `specs/`), convertendo constituição e configuração e corrigindo links. | comando |
 | `mix-grill` | Primitiva de entrevista: rodadas, resposta recomendada, fatos são do agente e decisões são suas. | automática |
 | `mix-testing` | Referência de testes: seams, mocks, anti-padrões e o passe de poda. | automática |
@@ -240,7 +241,8 @@ As duas ficam na raiz do repo (in-repo) ou na pasta do projeto dentro do hub:
 | `mix-triage` | — | `triage` (+ `AGENT-BRIEF.md`, `OUT-OF-SCOPE.md`) | labels e acesso do tracker via `mix.yml`, modo só-leitura, verificação em worktree, multi-repo |
 | `mix-quick-implement` | `specify`, `implement` (compactados) | `diagnosing-bugs` (sinal antes do fix), `tdd` | gate de tamanho, check-in único, spec curta com Outcome |
 | `mix-diagnose` | — | `diagnosing-bugs` (+ script HITL) | contexto do projeto e notas de incidentes, bugs entre repos/contratos, sem commit/push sem aprovação |
-| `mix-wait-what` | — | `wait-what` | — |
+| `mix-explain` | — | `wait-what` (reexplicar a última mensagem) | alvos (spec, ADR, arquivo, URL, tema), evidências com fonte; regras de escrita adaptadas do [Português Técnico Simplificado](https://github.com/nosportugal/portugues-tecnico-simplificado-skill) (NOS, MIT) para pt-BR |
+| `mix-self-improve` | — | — | relatório do `/insights` como entrada; ideia de modos, limites de evidência e estado inspirada na skill `improve-system` do [buildpartner-plugin](https://github.com/austinmarchese/buildpartner-plugin) (texto próprio, sem cópia) |
 | `mix-migrate` | — | — | migração das estruturas do Spec Kit e do Matt para o layout do mix |
 | `mix-flow` | — | `ask-matt` | — |
 
@@ -250,5 +252,7 @@ extensões/hooks e os scripts bash/PowerShell do Spec Kit também foram removido
 
 ## Licença
 
-MIT. Derivado de Spec Kit (© GitHub, Inc.) e mattpocock/skills (© Matt Pocock), ambos MIT; veja
+MIT. Derivado de Spec Kit (© GitHub, Inc.), mattpocock/skills (© Matt Pocock) e
+portugues-tecnico-simplificado-skill (© Dustin Yuchen Teng, Thiago Machado, NOS Comunicações),
+todos MIT; veja
 [CREDITS.md](CREDITS.md).

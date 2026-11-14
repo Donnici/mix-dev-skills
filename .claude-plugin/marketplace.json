@@ -6,7 +6,7 @@
     {
       "name": "mix-dev-skills",
       "source": "./",
-      "description": "Spec Kit flow + Matt Pocock's skills, merged: scope, setup, constitution, specify, clarify, plan, tasks, analyze, implement, review, PRs, retro.",
+      "description": "Spec Kit flow + Matt Pocock's skills, merged: scope, setup, constitution, specify, clarify, plan, tasks, analyze, implement, quick-implement, review, PRs, retro, triage, diagnose, migrate, explain, self-improve.",
       "category": "engineering"
     }
   ]
