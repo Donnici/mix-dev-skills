@@ -57,6 +57,13 @@ The baseline the Standards axis applies even when the repo documents nothing. Ea
 - **Repeated switch** on the same discriminator in several places. → one map or polymorphism.
 - **Shotgun surgery**: one logical change scattered across many files. → gather what changes
   together.
+- **Hidden link**: code that must change with another place while nothing shows it: a copied
+  value or rule, a global set elsewhere, a call order callers must know. → one source of truth,
+  or make the link explicit (a parameter, a type, a single entry point).
+- **Special case**: an `if` for one value, a parameter for one caller, a sleep or retry waiting
+  for something to be ready, a skipped test, added to make one situation work. → fix the design
+  the case reveals; when that is outside the diff's scope, report it and suggest `/mix-untangle`
+  on the area.
 
 ## Scope
 

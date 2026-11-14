@@ -48,6 +48,7 @@ quando independentes), review final e PR, se você pediu.
 | `/mix-triage` | Triagem de issues (e PRs externos): categoria e estado, duplicidade e rejeições anteriores, reprodução, grill e brief pronto para agente. Nada é escrito no tracker sem confirmação; tracker só-leitura gera rascunhos locais. | comando |
 | `mix-diagnose` | Bugs difíceis e regressões de performance: primeiro um loop de feedback que fica vermelho no bug, depois hipóteses, instrumentação, fix com teste de regressão e limpeza. Funciona entre repos. | comando + automática |
 | `mix-spike` | Investigação técnica antes da spec: mapeia como os repos tratam o assunto hoje, roda uma prova de conceito descartável, compara opções e grava `spike.md` com recomendação em fases. Continua no `/mix-specify --quick` quando vira feature. | comando + automática |
+| `/mix-untangle` | Dívida estrutural de um codebase ou de uma área, entre repos: mapeia hotspots, imports e o que muda junto no git; lista ligações ocultas, ligações desnecessárias, código sobrando e casos especiais; redesenha a partir dos requisitos de hoje e grava `untangle.md` com cada correção acima dos problemas que resolve, em fatias sem mudança de comportamento. Não altera código; segue pelo `/mix-specify --quick` (uma história por fatia) ou `/mix-quick-implement`. | comando |
 | `/mix-explain` | Explica algo em português técnico claro: uma spec com plano, tasks e evidências (`/mix-explain spec 0014`), um ADR, um arquivo, uma doc, uma URL ou um tema. Sem argumento, explica a última resposta do agente. Não grava nada. | comando |
 | `/mix-self-improve` | Lê o relatório do `/insights`, o histórico de sessões e o seu setup (CLAUDE.md, skills, hooks, MCP, settings); explica como você usa o Claude, pontos positivos e negativos, novos jeitos de usar, e propõe melhorias com evidência (regras, skills, hooks, rotinas), aplicadas uma a uma com sua aprovação. `routine` roda sem perguntas. | comando |
 | `/mix-migrate` | Move a estrutura do Spec Kit e das skills do Matt para o layout do mix (`mix-dev-skills/` + `specs/`), convertendo constituição e configuração e corrigindo links. | comando |
@@ -223,7 +224,7 @@ As duas ficam na raiz do repo (in-repo) ou na pasta do projeto dentro do hub:
 │   └── templates/               templates próprios do projeto (sobrepõem os padrão)
 └── specs/NNN-slug/              spec.md, plan.md, tasks.md, state.yml, checklists/, delivery.md
                                  (no /mix-quick-implement, só um spec.md curto com o Outcome e o state.yml;
-                                 num spike, só o spike.md)
+                                 num spike, só o spike.md; num untangle, só o untangle.md)
 
 <hub>/mix-dev-skills/hub.yml     projetos (nome → pasta) + ativo
 ~/.mix-dev-skills/registry.yml   hubs conhecidos (para achar o projeto a partir do repo de código)
@@ -256,6 +257,7 @@ As duas ficam na raiz do repo (in-repo) ou na pasta do projeto dentro do hub:
 | `mix-land` | — | — | classificação de falhas de CI, reprodução antes do fix, respostas no tom configurado, ordem de merge |
 | `mix-housekeep` | — | — | limpeza segura de worktrees e branches, sincronia de specs com o status dos PRs |
 | `mix-spike` | — | — | investigação com prova de conceito e recomendação em fases (`spike.md`) |
+| `mix-untangle` | — | `codebase-design` (módulos profundos) | adaptada da skill `untangle-codebase` do [caldoai/skills](https://github.com/caldoai/skills) (Maze, MIT): pergunta "muda junto?", casos especiais como sinal de design, log de decisões; aqui só diagnóstico e redesenho, multi-repo, em fatias que seguem pelo fluxo |
 | `mix-migrate` | — | — | migração das estruturas do Spec Kit e do Matt para o layout do mix |
 | `mix-flow` | — | `ask-matt` | — |
 
@@ -266,6 +268,6 @@ extensões/hooks e os scripts bash/PowerShell do Spec Kit também foram removido
 ## Licença
 
 MIT. Derivado de Spec Kit (© GitHub, Inc.), mattpocock/skills (© Matt Pocock) e
-portugues-tecnico-simplificado-skill (© Dustin Yuchen Teng, Thiago Machado, NOS Comunicações),
-todos MIT; veja
+portugues-tecnico-simplificado-skill (© Dustin Yuchen Teng, Thiago Machado, NOS Comunicações)
+e caldoai/skills (© Maze), todos MIT; veja
 [CREDITS.md](CREDITS.md).

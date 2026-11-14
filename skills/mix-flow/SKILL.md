@@ -120,6 +120,11 @@ review works from the files the feature touched.
 - **An open technical question** (can we integrate X, how would we automate Y) →
   **`mix-spike`**: current state across repos, a throwaway proof of concept, options, and a
   phased recommendation in `spike.md`. Continues at `/mix-specify --quick` when it needs building.
+- **A codebase or area that makes every change expensive** → **`/mix-untangle [area]`**: maps
+  hotspots, imports, and co-change; lists hidden links, needless links, surplus, and special
+  cases; redesigns them into fixes ordered as behaviour-preserving slices in `untangle.md`.
+  Changes no code; continues at `/mix-specify --quick` (one story per slice) or
+  `/mix-quick-implement` for a small slice.
 
 ## After the PR
 
@@ -166,7 +171,7 @@ A trivial edit (typo, copy, config value) can skip even that: implement directly
 │   ├── triage/                  local triage drafts
 │   └── templates/               optional project overrides of the bundled templates
 └── specs/NNN-slug/              spec.md, plan.md, tasks.md, state.yml, checklists/, delivery.md
-                                 (or spike.md for a spike)
+                                 (or spike.md for a spike, untangle.md for an untangle)
 
 <hub>/mix-dev-skills/hub.yml     projects (name → folder) + active
 ~/.mix-dev-skills/registry.yml   hubs to search when a session starts inside a code repo
