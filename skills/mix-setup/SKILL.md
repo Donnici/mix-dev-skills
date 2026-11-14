@@ -71,7 +71,11 @@ Read whatever exists; assume nothing. Dispatch one read-only subagent **per repo
 1. **Manifests and tooling**: `package.json` (dependencies, devDependencies, scripts, workspaces,
    engines), the lockfile (decides the package manager), `tsconfig*`, lint/format/test configs,
    `pyproject.toml` / `go.mod` / `Cargo.toml` / `pom.xml` / `Gemfile` / `composer.json` when
-   present, `Dockerfile`, CI workflows (the commands CI runs are the quality gates).
+   present, `Dockerfile`, CI workflows (the commands CI runs are the quality gates: record the
+   formatter by name and the lint and typecheck commands at the scope CI runs them).
+   Local environment: compose files, `.devcontainer/`, `.env.example`, test setup files (the
+   services, env vars, test database name and port integration tests need). Name variables and
+   where they come from; never copy secret values.
 2. **Docs**: `README*`, `CONTRIBUTING*`, `docs/`, `CLAUDE.md` / `AGENTS.md`, `.cursor/rules`,
    `.github/copilot-instructions.md`, the project's glossary and ADRs. Existing written rules are
    inputs to the constitution.

@@ -56,6 +56,10 @@ creates the constitution with the default rules. Re-run after big structural cha
    `/mix-implement` again to close them.
 9. **`/mix-retro <PR#>`**: turn repeated review comments into checks and rules.
 
+**`/mix-ticket <key | idea>`** runs steps 1–8 in one session: you approve the spec once, then it
+plans, tasks, analyzes, implements (parallel slices when independent), reviews, and opens the PR
+when you asked for it.
+
 Keep steps 1–4 in one session when you can. Start `/mix-implement` in a fresh session for large
 features; `tasks.md` carries everything it needs.
 
@@ -113,6 +117,17 @@ review works from the files the feature touched.
 - **Something broken, flaky, or slow** → **`mix-diagnose`**: build a tight red loop first, then
   hypothesise, fix with a regression test. Afterwards `/mix-retro` if a check or rule would have
   prevented it.
+- **An open technical question** (can we integrate X, how would we automate Y) →
+  **`mix-spike`**: current state across repos, a throwaway proof of concept, options, and a
+  phased recommendation in `spike.md`. Continues at `/mix-specify --quick` when it needs building.
+
+## After the PR
+
+- **`mix-land`**: open PRs to merge-ready: CI failures classified (this PR, inherited, flaky,
+  infra) and reproduced before fixing, conflicts, reviewer replies drafted in your tone, and the
+  merge order across repos.
+- **`mix-housekeep`**: remove worktrees and branches of merged PRs, list unpushed work, and sync
+  each spec's `state.yml` and the index with the PRs' real status.
 
 ## Small changes
 
@@ -151,6 +166,7 @@ A trivial edit (typo, copy, config value) can skip even that: implement directly
 │   ├── triage/                  local triage drafts
 │   └── templates/               optional project overrides of the bundled templates
 └── specs/NNN-slug/              spec.md, plan.md, tasks.md, state.yml, checklists/, delivery.md
+                                 (or spike.md for a spike)
 
 <hub>/mix-dev-skills/hub.yml     projects (name → folder) + active
 ~/.mix-dev-skills/registry.yml   hubs to search when a session starts inside a code repo

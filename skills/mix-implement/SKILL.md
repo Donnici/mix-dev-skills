@@ -34,8 +34,11 @@ line you write in this session; re-read it if the session gets long.
 **Checklist gate**: if `checklists/` has unchecked items, show a table (checklist / total / checked
 / unchecked) and ask whether to proceed. Never edit checklist files.
 
-**Baseline**: in each repo touched, run its quality gates once before changing anything and note
-pre-existing failures, so they are not mistaken for yours.
+**Baseline**: in each repo touched, bring up what its architecture doc's **Local environment**
+lists, then run the gates from its **Commands** table once before changing anything and note
+pre-existing failures, so they are not mistaken for yours. A setup step you had to discover (a
+service, env var, database name, port) goes into that **Local environment** table, with the
+user's approval, so the next session starts from it.
 
 **Change tracking**: per repo, with git, note the starting commit (`git rev-parse HEAD`) and any
 files already dirty; the diff since then is "this feature's diff" in that repo. Without git, keep
@@ -60,6 +63,9 @@ For **each task**:
 1. **Read the prior art.** Open the task's `mirror` exemplar and every file the task edits. No
    exemplar named → search the task's repo for the closest file of the same kind and read it.
    Note its structure, naming, imports, error handling, and test style; your code follows them.
+   Then find the tests that already cover each function you will edit and name the invariants
+   they enforce (call order, locks, permissions, valid flag or config combinations); your change
+   keeps every one of them.
 2. **Check what's installed.** Before writing any capability (formatting, validation, requests,
    state, dates, ids, retries, styling), look it up in that repo's **Libraries to use** and its
    manifest. Use the installed library and the repo's wrapper around it. Search for an existing
@@ -76,12 +82,20 @@ For **each task**:
    explain *what*; a comment appears only for a non-obvious *why*, in one line.
 6. **Stay in scope.** Touch only what the task needs. A problem you notice elsewhere becomes a note
    for the report, not an edit.
-7. **Verify.** Run the typecheck and the affected test file(s) in that repo. Fix before moving on.
+7. **Verify.** Run the repo's formatter, then its lint and typecheck over the whole package (the
+   commands in its **Commands** table, at the scope CI runs them), and the affected test
+   file(s). Fix before moving on.
 8. **Mark** the task `[X]` in `tasks.md`.
 
 When a task turns out wrong (the plan missed something, the exemplar doesn't fit, a blocker is
 missing), stop and tell the user what you found and what you propose. Do not silently redesign.
+The same applies when the code cannot deliver a requirement as the spec states it (the session
+model, a platform limit): stop, say which part is achievable, and let the user decide; a partial
+delivery is reported as partial, never described as complete.
 A failing sequential task halts the run; for `[P]` tasks, finish the others and report the failure.
+
+A bug that survives one fix attempt (a test still red, a symptom the user still sees) goes to
+the `mix-diagnose` skill, through the Skill tool, before a second attempt.
 
 Large features may run work through implementer subagents, one per repo or per story. Brief them
 with **pointers** (feature folder, task IDs, repo path, constitution and architecture paths), not

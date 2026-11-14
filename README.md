@@ -23,6 +23,10 @@ Mudança pequena (um comportamento, poucos arquivos, sem contrato nem dependênc
 `/mix-quick-implement "<issue>"`: um comando, uma rodada de perguntas, spec curta em `specs/` e
 implementação com teste até o fim.
 
+Quer o fluxo inteiro de uma vez? `/mix-ticket COR-123` roda do spec ao PR na mesma sessão: você
+aprova a spec uma vez e ele segue com plan, tasks, analyze, implementação (fatias em paralelo
+quando independentes), review final e PR, se você pediu.
+
 | Skill | O que faz | Tipo |
 |-------|-----------|------|
 | `/mix-scope` | Mostra, troca (`/mix-scope lumen`), lista ou cria projetos no hub. Todas as outras skills resolvem o contexto por ela. | comando + automática |
@@ -37,9 +41,13 @@ implementação com teste até o fim.
 | `/mix-quick-implement` | Atalho para mudanças pequenas: localiza o código, confirma o comportamento atual, faz **um único check-in** (mudança, teste, decisões com resposta recomendada, branch e commit), escreve uma spec curta, implementa test-first, faz a poda e registra o resultado na spec. Mudança que cresce é encaminhada ao `/mix-specify --quick` sem perder o que foi levantado. | comando |
 | `/mix-review` | Revisão em 3 eixos (Padrões, Spec, Testes) em subagentes paralelos, com verificação de cada achado; corrige, gera tasks de convergência ou comenta no PR; com `--report`, só lê e devolve as sugestões num bloco JSON, sem perguntar, alterar ou publicar nada. | comando + automática |
 | `/mix-pr` | Um comando, sem aprovação: cria a branch, faz commit, push e abre o PR (um por repo; single, por história ou empilhado) e mostra link, título e descrição. Quer mudar? Peça no chat que ele edita o PR. Também é dono das convenções de nomes. | comando + automática |
+| `/mix-ticket` | Do ticket (ou ideia) ao PR numa sessão: lê o ticket no tracker, roda specify, clarify quando precisa, plan, tasks e analyze, para **uma vez** para você aprovar a spec, implementa (fatias independentes em paralelo, em worktrees), faz o review final e abre o PR quando você pediu. Nunca faz merge. | comando |
+| `mix-land` | Deixa os PRs abertos prontos para merge: lista CI, conflitos e comentários; classifica cada falha de CI (deste PR, herdada da base, flaky, infra); reproduz antes de corrigir; rascunha respostas aos revisores no seu tom (`pr_reply_tone`); dá a ordem de merge entre repos. Push só via `/mix-pr` e com pedido seu. | comando + automática |
+| `mix-housekeep` | Limpa worktrees e branches de PRs mergeados (nunca algo com trabalho dentro), lista o que falta subir e alinha o `state.yml` das specs e o `index.md` com o status real dos PRs. `--dry-run` só mostra o plano. | comando + automática |
 | `/mix-retro` | Transforma comentários recorrentes de PR em lint/CI, regras ou contexto. | comando |
 | `/mix-triage` | Triagem de issues (e PRs externos): categoria e estado, duplicidade e rejeições anteriores, reprodução, grill e brief pronto para agente. Nada é escrito no tracker sem confirmação; tracker só-leitura gera rascunhos locais. | comando |
 | `mix-diagnose` | Bugs difíceis e regressões de performance: primeiro um loop de feedback que fica vermelho no bug, depois hipóteses, instrumentação, fix com teste de regressão e limpeza. Funciona entre repos. | comando + automática |
+| `mix-spike` | Investigação técnica antes da spec: mapeia como os repos tratam o assunto hoje, roda uma prova de conceito descartável, compara opções e grava `spike.md` com recomendação em fases. Continua no `/mix-specify --quick` quando vira feature. | comando + automática |
 | `/mix-explain` | Explica algo em português técnico claro: uma spec com plano, tasks e evidências (`/mix-explain spec 0014`), um ADR, um arquivo, uma doc, uma URL ou um tema. Sem argumento, explica a última resposta do agente. Não grava nada. | comando |
 | `/mix-self-improve` | Lê o relatório do `/insights`, o histórico de sessões e o seu setup (CLAUDE.md, skills, hooks, MCP, settings); explica como você usa o Claude, pontos positivos e negativos, novos jeitos de usar, e propõe melhorias com evidência (regras, skills, hooks, rotinas), aplicadas uma a uma com sua aprovação. `routine` roda sem perguntas. | comando |
 | `/mix-migrate` | Move a estrutura do Spec Kit e das skills do Matt para o layout do mix (`mix-dev-skills/` + `specs/`), convertendo constituição e configuração e corrigindo links. | comando |
@@ -214,7 +222,8 @@ As duas ficam na raiz do repo (in-repo) ou na pasta do projeto dentro do hub:
 │   ├── triage/                  rascunhos de triagem (tracker só-leitura)
 │   └── templates/               templates próprios do projeto (sobrepõem os padrão)
 └── specs/NNN-slug/              spec.md, plan.md, tasks.md, state.yml, checklists/, delivery.md
-                                 (no /mix-quick-implement, só um spec.md curto com o Outcome e o state.yml)
+                                 (no /mix-quick-implement, só um spec.md curto com o Outcome e o state.yml;
+                                 num spike, só o spike.md)
 
 <hub>/mix-dev-skills/hub.yml     projetos (nome → pasta) + ativo
 ~/.mix-dev-skills/registry.yml   hubs conhecidos (para achar o projeto a partir do repo de código)
@@ -243,6 +252,10 @@ As duas ficam na raiz do repo (in-repo) ou na pasta do projeto dentro do hub:
 | `mix-diagnose` | — | `diagnosing-bugs` (+ script HITL) | contexto do projeto e notas de incidentes, bugs entre repos/contratos, sem commit/push sem aprovação |
 | `mix-explain` | — | `wait-what` (reexplicar a última mensagem) | alvos (spec, ADR, arquivo, URL, tema), evidências com fonte; regras de escrita adaptadas do [Português Técnico Simplificado](https://github.com/nosportugal/portugues-tecnico-simplificado-skill) (NOS, MIT) para pt-BR |
 | `mix-self-improve` | — | — | relatório do `/insights` como entrada; ideia de modos, limites de evidência e estado inspirada na skill `improve-system` do [buildpartner-plugin](https://github.com/austinmarchese/buildpartner-plugin) (texto próprio, sem cópia) |
+| `mix-ticket` | — | — | orquestra o fluxo principal numa sessão, com um único checkpoint na spec |
+| `mix-land` | — | — | classificação de falhas de CI, reprodução antes do fix, respostas no tom configurado, ordem de merge |
+| `mix-housekeep` | — | — | limpeza segura de worktrees e branches, sincronia de specs com o status dos PRs |
+| `mix-spike` | — | — | investigação com prova de conceito e recomendação em fases (`spike.md`) |
 | `mix-migrate` | — | — | migração das estruturas do Spec Kit e do Matt para o layout do mix |
 | `mix-flow` | — | `ask-matt` | — |
 

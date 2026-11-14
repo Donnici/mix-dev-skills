@@ -18,6 +18,8 @@ the config, never from habit.
 - **`/mix-pr` (no action), or the user asking in their own words to open a PR, ship, or push**:
   that request is the approval. Run **ship** end to end with no confirmation step, then show the
   result. Changes to title or body come afterwards, when the user asks in the chat.
+- **`mix-ticket` or `mix-land` calling ship** while carrying the user's own request to open the
+  PR or push (in their words, earlier in the session): that request is the approval; run ship.
 - **`branch` / `commit` requested by another skill**: local only; the calling skill owns the
   user's approval. Push and PR never start from another skill's request: answer it with the
   command to run (`/mix-pr`) and stop.
@@ -26,11 +28,19 @@ the config, never from habit.
 
 Per repo touched by the current work (repos with no changes get nothing):
 
+0. **Preflight**, once per run, before touching anything: `gh auth status` (or `glab auth
+   status`), `gh api rate_limit --jq .resources.core.remaining`, and, when the repo signs
+   commits (`git config commit.gpgsign` is `true`), a signing probe:
+   `git commit-tree HEAD^{tree} -S -m probe` (it creates no ref). A failure → stop and report
+   what to fix (re-auth, unlock the key agent such as 1Password, wait for the rate-limit reset)
+   before any commit.
 1. **Branch**: on the base branch → resolve the name and create it (`branch`). On any other
    branch → keep it.
 2. **Commit**: uncommitted changes → `commit` them. Files that clearly do not belong to the work
    (secrets such as `.env`, build output, unrelated strays) stay unstaged and go in the report.
-3. **Push**: `git -C <repo> push -u origin <branch>`.
+3. **Push**: `git -C <repo> push -u origin <branch>`, then confirm
+   `git -C <repo> ls-remote origin <branch>` returns the local `HEAD` SHA. A mismatch is a
+   failed push: no PR is opened or updated on a stale commit.
 4. **PR**: open it (`pr`). A PR already open for the branch → update its title and body instead
    of opening a second one.
 5. **Report**, per PR:
@@ -48,7 +58,8 @@ Values that would otherwise be asked (`[ticket]`, unknown variables) are inferre
 branch name, spec, or commits; ask only when no source has them, in one question, before step 1.
 `[type]` is inferred without confirmation.
 
-Stop and report only on: a failed push (rejected, no remote), no changes and no commits ahead of
+Stop and report only on: a failed preflight, a failed push (rejected, no remote, remote SHA not
+the local one), no changes and no commits ahead of
 the base, or a merge conflict. Never force-push.
 
 **Edits after the report**: on request, `gh pr edit <n> --title ... --body-file ...` (or
@@ -128,11 +139,16 @@ finds one, else:
 - [ ] <acceptance scenario as a check>
 
 ## Notes for reviewers
-<decisions or trade-offs a reviewer would otherwise ask about; omit when none>
+<decisions or trade-offs a reviewer would otherwise ask about; known limitations; omit when none>
 ```
 
-Keep it short; reviewers read the diff. `gh pr create --base <base> --title ... --body-file ...`
-(draft for macro PRs); GitLab → `glab mr create`; other hosts (Bitbucket, etc.) without a CLI →
+Keep it short; reviewers read the diff. Every claim in **What** is something the diff does; a
+requirement delivered only in part is named as partial under **Notes for reviewers**.
+
+`gh pr create --base <base> --title ... --body-file ...` (draft for macro PRs); `gh pr create`
+refused by a rate limit → the same PR through the REST API
+(`gh api repos/<owner>/<repo>/pulls -f head=<branch> -f base=<base> -f title=... -F body=@<file>`);
+GitLab → `glab mr create`; other hosts (Bitbucket, etc.) without a CLI →
 print the title and body and the create-PR URL for the remote. Record each PR URL in the story's Delivery line, and append it under `prs`
 in `state.yml` in the feature folder, next to `spec.md`:
 

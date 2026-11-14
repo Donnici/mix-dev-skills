@@ -4,7 +4,9 @@ Agent skills, one folder per skill under `skills/mix-*/` (`SKILL.md` + templates
 
 - Each skill must work when copied alone: link only to files inside its own folder; cross-skill
   reuse goes through the Skill tool (`mix-grill`, `mix-testing`, `mix-review`, `mix-pr`,
-  `mix-constitution`, `mix-scope` are model-invoked for that reason).
+  `mix-constitution`, `mix-scope`, `mix-diagnose`, `mix-land`, `mix-housekeep`, `mix-spike` are
+  model-invoked for that reason). `mix-ticket` is the one exception: it runs command skills by
+  reading their sibling `SKILL.md`, since the Skill tool cannot start them.
 - The project layout (`mix-dev-skills/` + `specs/` at the base) is defined once, in
   `skills/mix-scope/SKILL.md`; other skills call `mix-scope` and use those fixed names. No skill
   reads or writes Spec Kit or Matt Pocock structures; `mix-migrate` converts them.

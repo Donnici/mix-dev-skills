@@ -15,16 +15,30 @@
 
 ## Commands
 
+These are the quality gates: agents run them exactly as written, over the whole package as CI
+does, and never substitute another tool.
+
 | Purpose | Command |
 |---------|---------|
 | Install | |
 | Dev | |
-| Typecheck | |
-| Lint | |
-| Format | |
+| Typecheck (whole package, as CI) | |
+| Lint (whole package, as CI) | |
+| Format (the repo's own formatter) | [e.g. `npx oxfmt --check .`] |
 | Test (all) | |
 | Test (single file) | |
 | Build | |
+
+## Local environment
+
+What tests and the dev server need on this machine, so no session rediscovers it.
+
+| Need | How |
+|------|-----|
+| Services | [e.g. `docker compose up -d postgres redis`] |
+| Env file | [e.g. copy `.devcontainer/.env`; vars tests read: `BACKOFFICE_URL`] |
+| Test database | [name, port, how it is created and migrated] |
+| Known unrelated failures | [e.g. enum migration X fails locally; not caused by feature work] |
 
 ## Libraries to use
 

@@ -59,7 +59,9 @@ command, the source paths, and its brief. Each returns findings as
   Repo rules override the smell list."
 - **Spec brief**: "Map the diff to the spec's FRs, acceptance scenarios, and the tasks. Classify
   each gap as `missing`, `partial`, `contradicts` (behaviour conflicts with the spec or a
-  constitution MUST), or `unrequested` (scope creep). Quote the spec line for each. When the plan
+  constitution MUST), `unrequested` (scope creep), or `overclaim` (the PR description or commit
+  message states behaviour the code does not deliver, such as calling a partial requirement
+  done). Quote the spec line, or the description line for `overclaim`, for each. When the plan
   has contracts, check both sides against them: every consumer call matches the provider's
   route, method, field names, types, optionality, error handling, and auth, and no side has a
   field or status the contract lacks."
@@ -78,7 +80,7 @@ positives, duplicates across axes (keep the one in the most specific axis), and 
 or formatter enforces. Severity:
 
 - **Blocking**: violates a constitution MUST; spec `missing` / `contradicts` on a P1 story;
-  a bug.
+  an `overclaim`; a bug.
 - **Should fix**: pattern deviation, reinvented helper, redundant test, comment noise, scope creep.
 - **Nit**: naming and minor style; at most five, the rest counted.
 
@@ -90,7 +92,7 @@ or formatter enforces. Severity:
 ### Standards  (n blocking · n should-fix · n nits)
 - **[blocking]** `src/x.ts:42` — <finding>. Rule: Constitution IV. Fix: <fix>.
 
-### Spec  (n missing · n partial · n contradicts · n unrequested)
+### Spec  (n missing · n partial · n contradicts · n unrequested · n overclaim)
 - **[missing]** FR-003 "<quoted line>" — <evidence>. Fix: <fix>.
 
 ### Tests  (n to delete · n to merge · n to rewrite · n gaps)
@@ -121,8 +123,9 @@ With a flag, do that; otherwise ask which (several may apply):
   When the file exists, change only these two values and keep every other key (such as `prs`) and
   comment. Name `/mix-implement` as the next step. Done when `state.yml` holds these values.
 - **`--comment`** (needs a PR and `gh`; only when the user asked for it, never when called by
-  another skill): post findings as inline PR review comments. Show the exact comments
-  first and post only after the user confirms.
+  another skill): post findings as inline PR review comments, in the config's
+  `git.pr_reply_tone` when set. Show the exact comments first and post only after the user
+  confirms.
 
 If the same kind of finding keeps appearing across reviews, suggest `/mix-retro` to turn it into
 a rule or an automated check.

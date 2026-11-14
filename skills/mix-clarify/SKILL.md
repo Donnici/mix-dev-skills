@@ -36,7 +36,9 @@ Mark each category **Clear / Partial / Missing** (internal map, shown only if no
 - **Integrations**: external services and their failure modes, import/export formats.
 - **Edge cases & failures**: negative paths, rate limits, concurrent edits, partial failure.
 - **Constraints & trade-offs**: stated constraints, rejected alternatives.
-- **Terminology**: terms that drift or conflict with the glossary.
+- **Terminology**: terms that drift or conflict with the glossary; domain verbs with more than
+  one reading (logout, revoke, delete, cancel) that lack a one-sentence definition of what
+  changes, for whom, and what stays.
 - **Completion signals**: are acceptance scenarios testable? Is "done" measurable?
 - **Placeholders**: TODOs, `[NEEDS CLARIFICATION]`, vague adjectives ("fast", "intuitive",
   "robust") with no measure.

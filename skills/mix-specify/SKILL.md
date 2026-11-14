@@ -67,6 +67,9 @@ from decisions (ask). Call the Skill tool with `mix-grill` and run it until the 
 
 - Scope boundaries: what is in, what is explicitly out.
 - Actors and permissions, when more than one reading is plausible.
+- Domain verbs with more than one reading (logout, revoke, delete, cancel, archive): one
+  sentence stating what changes, for whom, and what stays, checked against what the code
+  supports today; it goes into the glossary.
 - Behaviour on edge cases, empty states, failures, concurrent edits.
 - Data lifecycle: what is created, changed, deleted, retained, and by whom.
 - Security, privacy, and compliance, when legally or financially significant.

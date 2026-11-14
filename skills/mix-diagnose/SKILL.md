@@ -52,6 +52,14 @@ A 30-second flaky loop is barely better than none; a 2-second deterministic one 
 **Non-deterministic bugs**: aim for a higher reproduction rate, not a clean repro. Loop the
 trigger 100×, parallelise, add stress, narrow timing windows. 50% is debuggable; 1% isn't yet.
 
+**UI bugs** (reopens, flickers, lost focus, stale values): reproduce with production timing: an
+interaction test (Storybook `play`, Testing Library, Playwright) with fake timers, the real
+debounce delay, and async results that resolve after the user's action. Hypotheses to rank in
+Phase 3 start from: a component or portal remounting when data arrives (watch `key`s and
+conditional parents), a focus or blur race, a stale closure over old state, a state reset on
+re-render, an effect firing twice. A sandbox (Storybook) that stays green while the app fails
+means the sandbox lacks the trigger: add the missing async step or move to the app.
+
 **No loop possible**: stop and say so, listing what you tried. Ask for access to an environment
 that reproduces it, a redacted captured artifact (HAR, logs, recording with timestamps), or
 permission to add temporary instrumentation. Do not hypothesise without a loop.

@@ -47,6 +47,7 @@ git:
   pr_title_pattern: "[type]: [title]"
   commit_style: conventional   # conventional | ticket-prefix ("[ticket] message") | free
   pr_template: auto            # auto = use the repo's .github/pull_request_template.md when present
+  pr_reply_tone: ""            # tone for replies to reviewers, e.g. "short, direct, informal"
 
 tracker:
   type: none                # none | jira | linear | github | gitlab | other

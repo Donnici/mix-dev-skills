@@ -99,3 +99,8 @@ Cite specific lines; report missing sections as missing rather than inventing th
 CRITICAL present → resolve before `/mix-implement`, naming which skill fixes each
 (`/mix-clarify`, `/mix-plan`, `/mix-tasks`, or a direct edit). Otherwise the user may proceed.
 Then ask: "Want concrete remediation edits for the top N findings?" Apply nothing unasked.
+
+Approved edits are applied one at a time with the Edit tool, each replacing an exact passage;
+never with a script that rewrites a file. After the edits, compare each touched file's line
+count and headings with before: a file that shrank by more than the edits explain is restored
+and the edit redone.

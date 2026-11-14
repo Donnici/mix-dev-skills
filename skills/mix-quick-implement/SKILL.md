@@ -54,7 +54,8 @@ Find the code that produces the current behaviour, by domain concept, not just t
 - the files the change will edit, end to end;
 - the **exemplar**: the closest existing code of the same kind (a sibling component, handler, or
   condition that already does the right thing) — the fix mirrors it;
-- the tests that cover the area, to find the seam and the test style.
+- the tests that cover the area, to find the seam, the test style, and the invariants they
+  enforce (call order, locks, valid config combinations); the change keeps every one.
 
 Then **confirm the behaviour with a signal**, the light version of `mix-diagnose`'s loop: an
 existing or new test that asserts today's behaviour, a story/fixture render, a CLI or curl call.
@@ -138,13 +139,15 @@ git, track touched files in the spec's **Outcome**.
    update the spec with what you found, remove `status` and `next_step` from `state.yml`
    (keep any other key), since this route has no state value yet, and route to `/mix-specify --quick`.
 
-**Done when** the new test passes and the typecheck and the affected test files run green.
+**Done when** the new test passes and the repo's formatter, whole-package lint and typecheck
+(its architecture doc's **Commands**), and the affected test files run green.
 
 ## 6. Harden
 
 Over this change's diff:
 
-1. **Gates**: the repo's full quality gates (lint, typecheck, tests). Failures present before
+1. **Gates**: the repo's full quality gates (format, lint, typecheck, tests), exactly as its
+   architecture doc's **Commands** and **Local environment** give them. Failures present before
    your change are reported as pre-existing, not fixed.
 2. **Tests**: the `mix-testing` pruning pass over every test the change added or edited.
 3. **Noise**: remove narrating comments, debug logs, unused imports, and dead code the change added.
