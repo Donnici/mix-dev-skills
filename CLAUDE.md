@@ -16,5 +16,6 @@ Agent skills, one folder per skill under `skills/mix-*/` (`SKILL.md` + templates
   and only when the user asked in their own words.
 - Git is optional in every skill; anything touching git/gh has a no-git path.
 - Skill prose: English, imperative, positive phrasing, every step ends on a checkable criterion.
-  User docs (`README.md`): Portuguese.
-- New skills or renames: update the tables in `README.md` and `skills/mix-flow/SKILL.md`.
+  User docs: `README.md` in English and `README.pt-BR.md` in Portuguese; keep both in sync.
+- New skills or renames: update the tables in `README.md`, `README.pt-BR.md` and
+  `skills/mix-flow/SKILL.md`.

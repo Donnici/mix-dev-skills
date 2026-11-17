@@ -1,0 +1,32 @@
+name: Skill proposal or improvement
+description: Suggest a new skill, an option, or a change to how a skill works.
+title: "[proposal] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What goes wrong today, or what you do by hand that a skill should do. Real examples help most.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: The skill or change you have in mind, and where it fits in the flow.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Existing skills, Spec Kit or Matt Pocock skills, or other tools you tried.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I looked at `/mix-flow` and no existing skill covers this.
+          required: true
+        - label: I would like to open the pull request myself.
