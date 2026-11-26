@@ -18,8 +18,9 @@ ignores the patterns and libraries the repository already uses.
   between repos (route, fields, types, errors, auth) before either side is written.
 - **Reuse before writing.** Every task points to an existing file to imitate, and the
   constitution requires installed dependencies first.
-- **Review that knows AI smells.** Three parallel review axes (patterns, spec, tests), each
-  finding verified before it is reported, plus a mandatory test-pruning pass.
+- **Review that knows AI smells.** Six review axes (patterns, spec, tests, bugs, security,
+  architecture) in parallel, each finding verified before it is reported, plus a mandatory
+  test-pruning pass.
 - **Nothing reaches a remote without you.** Only `/mix-pr` pushes or opens PRs, and only when you
   ask.
 - **One hub, many projects.** Keep specs and rules outside the code, one scope per client or
@@ -74,7 +75,7 @@ slices in parallel), a final review and the PR, if you asked for it.
 | `/mix-analyze` | Consistency spec ↔ plan ↔ tasks; only writes `state.yml`. | command |
 | `/mix-implement` | Implements task by task in each repo, reading the exemplar first and honouring the contracts; after each delivery: test pruning, comment cleanup, self-review and a **local commit only with your approval**. Never pushes or opens a PR. | command |
 | `/mix-quick-implement` | Shortcut for small changes: finds the code, confirms current behaviour, does **a single check-in** (change, test, decisions with a recommended answer, branch and commit), writes a short spec, implements test-first, prunes and records the outcome in the spec. A change that grows is handed to `/mix-specify --quick` without losing what was gathered. | command |
-| `/mix-review` | Review on 3 axes (Patterns, Spec, Tests) in parallel subagents, verifying each finding; fixes, creates convergence tasks or comments on the PR; with `--report`, only reads and returns suggestions as a JSON block, without asking, changing or publishing anything. | command + automatic |
+| `/mix-review` | Review on 6 axes (Patterns, Spec, Tests, Bugs, Security, Architecture) with five severities (critical to info) and a `--profile quick` (one pass) or `deep` (parallel subagents and verification of each critical/high finding); fixes, creates convergence tasks or comments on the PR; with `--report`, only reads and returns summary, security, adherence and findings as a versioned JSON block (`mix-review-result`), without asking, changing or publishing anything. | command + automatic |
 | `/mix-pr` | One command, no approval: creates the branch, commits, pushes and opens the PR (one per repo; single, per story or stacked) and shows link, title and description. Want changes? Ask in chat and it edits the PR. Also owns the naming conventions. | command + automatic |
 | `/mix-ticket` | From ticket (or idea) to PR in one session: reads the ticket from the tracker, runs specify, clarify when needed, plan, tasks and analyze, stops **once** for you to approve the spec, implements (independent slices in parallel, in worktrees), runs the final review and opens the PR when you asked. Never merges. | command |
 | `mix-land` | Gets open PRs ready to merge: lists CI, conflicts and comments; classifies each CI failure (this PR, inherited from base, flaky, infra); reproduces before fixing; drafts replies to reviewers in your tone (`pr_reply_tone`); gives the merge order across repos. Pushes only through `/mix-pr` and on your request. | command + automatic |
@@ -286,7 +287,7 @@ it. Both sit at the repo root (in-repo) or in the project folder inside the hub:
 | `mix-tasks` | `tasks` (format, phases per story, [P]) | `to-tickets` (vertical slices, blockers, prefactor, expand–contract) | exemplar per task, hardening phase, tickets per story |
 | `mix-analyze` | `analyze` | — | reuse, exemplar and redundant-test checks |
 | `mix-implement` | `implement` (checklist gate, phases, mark [X]) | `implement`, `tdd` | exemplar reading per task, test pruning, comment pass, ship per story |
-| `mix-review` | `converge` (missing/partial/contradicts/unrequested, append-only) | `code-review` (parallel axes, Fowler smells) | Tests axis, AI smells, finding verification, `--fix/--tasks/--comment/--report` |
+| `mix-review` | `converge` (missing/partial/contradicts/unrequested, append-only) | `code-review` (parallel axes, Fowler smells) | Tests, Bugs, Security and Architecture axes, AI smells, finding verification, quick/deep profiles, `--fix/--tasks/--comment/--report` |
 | `mix-testing` | — | `tdd`, `tests.md`, `mocking.md` | pruning pass, redundancy across levels |
 | `mix-pr` | — | — | pattern-based names with variables, single/per-story/stacked strategies |
 | `mix-retro` | — | `retro` | PR comments as input |
