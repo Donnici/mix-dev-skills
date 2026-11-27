@@ -74,6 +74,11 @@ brief. Each returns findings as
 under 400 words. In `quick`, or without subagent support, work through the briefs one after
 another yourself, finishing each before the next.
 
+When the repo has a code graph (the `mix-graph` skill), add its briefing line to every subagent:
+callers, impact and routes come from the graph before any grep. With `impact.md` in report mode,
+pass it to every axis as given: it already lists the callers, affected tests and routes reaching
+the change, so no axis searches for them again.
+
 - **Standards**: "For every changed file, open the closest existing file of the same kind (the
   golden file if listed) and compare. Report: (a) each violation of a documented repo rule,
   citing the file and the rule (`standards`); (b) each pattern deviation from the exemplar,
@@ -199,6 +204,7 @@ covers steps 1 to 5 and replaces step 6.
   | `pr.delta.diff` | incremental | the diff `fromSha..headSha` |
   | `open-findings.json` | incremental | `[{ key, path, line, severity, category, title, explanation }]` |
   | `sources.json` | a ticket or document is cited | `[{ source, kind, title, text, read: true }` or `{ source, read: false, reason }]` |
+  | `impact.md` | the repo has a code graph | what the change reaches outside the diff: changed symbols with callers, routes reaching them (`route → … → symbol`), affected tests, and the graph's blind spots |
 
   Pin the diff from them, using no `gh` command and no network. Read a full file with
   `git show <sha>:<path>`, using the head sha from `pr.json`; when that fails, review from the diff
@@ -209,6 +215,11 @@ covers steps 1 to 5 and replaces step 6.
 - **Without subagents or `mix-scope`**, run the axes one after another. Take `mix-dev-skills/` and
   `specs/` from the project folder when the prompt names one (a hub project keeps them in the hub),
   otherwise from the working directory. A source that is missing is skipped and named in the report.
+- **Impact**: with `impact.md`, Bugs and Architecture judge the listed callers, and Security takes
+  a listed route as the entry point of `attackPath` with `reachability: possible`. A finding the
+  graph links to no route keeps the reachability the code shows; never `internal` only because
+  the graph found nothing. The graph answers more read-only questions
+  (`codegraph callers|callees|impact|node|query <name> --json`); building or syncing it is refused.
 - **Language**: write `summary`, findings, reasons and explanations in `pr.json` `language`.
 
 ### Incremental review

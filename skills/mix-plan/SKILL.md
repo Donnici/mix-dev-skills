@@ -39,7 +39,7 @@ between. Fill **Repos Affected**. Ask only when ownership is genuinely ambiguous
 
 ## 3. Find the prior art
 
-Dispatch read-only subagents in parallel, one per repo affected when there are several. Find:
+Dispatch read-only subagents in parallel, one per repo affected when there are several. When a repo has a code graph (the `mix-graph` skill), add its briefing line to each subagent, so it asks the graph before grep. Find:
 
 - The closest existing feature to this one, end to end (multi-repo: start from the system doc's
   golden path). Its structure is the default shape of this plan.
