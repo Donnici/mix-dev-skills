@@ -99,7 +99,9 @@ the `mix-diagnose` skill, through the Skill tool, before a second attempt.
 
 Large features may run work through implementer subagents, one per repo or per story. Brief them
 with **pointers** (feature folder, task IDs, repo path, constitution and architecture paths), not
-copies; require them to follow this section's per-task steps and the hard rule above.
+copies; require them to follow this section's per-task steps and the hard rule above. When a repo has a code graph (the `mix-graph` skill), add its briefing line to each subagent, so it asks the graph before grep.
+Before reading the prior art of a task, ask the graph for the exemplar's callers and the symbols
+it touches (`mix-graph`); sync the graph after editing code in an area you will query again.
 
 ## 3. Harden
 

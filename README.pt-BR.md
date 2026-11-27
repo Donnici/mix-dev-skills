@@ -54,6 +54,7 @@ quando independentes), review final e PR, se você pediu.
 | `/mix-explain` | Explica algo em português técnico claro: uma spec com plano, tasks e evidências (`/mix-explain spec 0014`), um ADR, um arquivo, uma doc, uma URL ou um tema. Sem argumento, explica a última resposta do agente. Não grava nada. | comando |
 | `/mix-self-improve` | Lê o relatório do `/insights`, o histórico de sessões e o seu setup (CLAUDE.md, skills, hooks, MCP, settings); explica como você usa o Claude, pontos positivos e negativos, novos jeitos de usar, e propõe melhorias com evidência (regras, skills, hooks, rotinas), aplicadas uma a uma com sua aprovação. `routine` roda sem perguntas. | comando |
 | `/mix-migrate` | Move a estrutura do Spec Kit e das skills do Matt para o layout do mix (`mix-dev-skills/` + `specs/`), convertendo constituição e configuração e corrigindo links. | comando |
+| `mix-graph` | Navega um repo pelo grafo do código local (CLI codegraph, só AST, sem IA, guardado num `.codegraph/` que o git ignora): chamadores, chamados, impacto até as rotas que alcançam uma mudança, testes afetados e símbolos de um arquivo, antes do grep. As outras skills orientam seus subagentes com ela; o `/mix-review` lê o `impact.md` que o Shark escreve. | automática |
 | `mix-grill` | Primitiva de entrevista: rodadas, resposta recomendada, fatos são do agente e decisões são suas. | automática |
 | `mix-testing` | Referência de testes: seams, mocks, anti-padrões e o passe de poda. | automática |
 | `/mix-flow` | Roteador: qual skill usar em cada situação. | comando |
@@ -241,6 +242,7 @@ As duas ficam na raiz do repo (in-repo) ou na pasta do projeto dentro do hub:
 | `mix-constitution` | `constitution` (versionamento, placeholders) | `retro` (check automatizado > regra escrita), `writing-for-agents` (regras positivas e checáveis) | princípios padrão com suas regras |
 | `mix-specify` | `specify` (template, numeração, checklist de qualidade) | `grill-with-docs`, `domain-modeling`, `to-spec` (problem/solution, out of scope) | Current Behaviour, entrega/tickets |
 | `mix-clarify` | `clarify` (taxonomia de cobertura, integração incremental) | `grilling` (rodadas por fronteira) | — |
+| `mix-graph` | — | — | envolve o CLI [codegraph](https://github.com/colbymchenry/codegraph) (MIT) com telemetria e daemon desligados; pontos cegos viram alcançabilidade desconhecida |
 | `mix-grill` | `clarify` (formato das perguntas, "why it matters") | `grilling` (design tree, fatos vs decisões) | perguntas materiais vs defaults |
 | `mix-plan` | `plan` (technical context, constitution check, complexity tracking) | `codebase-design` (módulos profundos, seams), `to-spec` (testing decisions) | inventário de reuso obrigatório |
 | `mix-tasks` | `tasks` (formato, fases por história, [P]) | `to-tickets` (fatias verticais, bloqueios, prefactor, expand–contract) | exemplar por task, fase de hardening, tickets por história |

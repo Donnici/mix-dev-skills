@@ -94,6 +94,9 @@ Read whatever exists; assume nothing. Dispatch one read-only subagent **per repo
    (`git log --oneline -30`), PR template, default branch.
 9. **Tracker**: ticket keys in branches, PR titles, commits (`ABC-123` → Jira/Linear, `#123` →
    GitHub); tracker MCP tools or CLIs available in this session.
+9a. **Code graph**: whether `codegraph --version` works and each repo has a `.codegraph/`. When
+   the CLI is there and a repo has no graph, build it (the `mix-graph` skill) and say so; when it
+   is missing, offer the install once, in the report.
 
 **Multi-repo only**, after the per-repo reports, trace the integrations yourself:
 

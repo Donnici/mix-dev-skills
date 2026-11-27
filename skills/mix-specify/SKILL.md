@@ -41,7 +41,7 @@ Explore the code the feature touches, in every repo of the project (one subagent
 there are several), until you can write **Current Behaviour** from evidence:
 which screens, flows, entities, and rules exist, and what the feature changes about them.
 Dispatch a read-only subagent for wide searches. If a related spec exists, read it and note
-overlaps.
+overlaps. When a repo has a code graph (the `mix-graph` skill), add its briefing line to each subagent, so it asks the graph before grep.
 
 ## 3. Delivery
 
